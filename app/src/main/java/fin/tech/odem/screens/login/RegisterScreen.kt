@@ -30,11 +30,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import fin.tech.odem.screens.destinations.HomeViewDestination
+import fin.tech.odem.screens.destinations.LoginViewDestination
+import fin.tech.odem.screens.destinations.PersonalInformationsViewDestination
+import fin.tech.odem.viewModels.RegisterViewModel
+import kotlinx.coroutines.launch
 
-val registerViewModel = RegisterViewModel()
 @Destination
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,9 +70,8 @@ fun RegisterView(navigator: DestinationsNavigator) {
                     focusedLabelColor = Color(0xFF536DFE),
                     focusedIndicatorColor = Color(0xFF536DFE),
                     cursorColor = Color(0xFF536DFE)
-                ),
+                ))
 
-                )
             Spacer(modifier = Modifier.padding(vertical = 24.dp))
             TextField(
                 value = passwordValue,
@@ -94,9 +96,7 @@ fun RegisterView(navigator: DestinationsNavigator) {
             }
             Spacer(modifier = Modifier.padding(vertical = 32.dp))
             Button(onClick = {
-                             if(registerViewModel.Register()){
-                                 navigator.navigate(direction = HomeViewDestination)
-                             }
+                navigator.navigate(direction = PersonalInformationsViewDestination(emailValue,passwordValue))
             },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
                 Text(text = "Register", fontSize = 24.sp,
@@ -107,9 +107,11 @@ fun RegisterView(navigator: DestinationsNavigator) {
     }
 }
 
+@Destination
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PersonalInformationsView(){
+fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, password:String){
+    val registerViewModel = RegisterViewModel()
     var firstNameValue by remember { mutableStateOf("") }
     var lastNameValue by remember { mutableStateOf("") }
     var phoneNumberValue by remember { mutableStateOf("") }
@@ -119,7 +121,7 @@ fun PersonalInformationsView(){
     Box (
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 48.dp, bottom = 64.dp, start = 24.dp, end = 24.dp),
+            .padding(top = 24.dp, start = 24.dp, end = 24.dp),
     ){
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -226,8 +228,14 @@ fun PersonalInformationsView(){
                     cursorColor = Color(0xFF536DFE)
                 )
                 )
-            Spacer(modifier = Modifier.padding(vertical = 24.dp))
-            Button(onClick = { if(registerViewModel.Register()){} },
+            Spacer(modifier = Modifier.padding(/*vertical = 24.dp*/))
+            Button(onClick = {
+                                registerViewModel.viewModelScope.launch {
+                                    if(registerViewModel.register(email,password,firstNameValue,lastNameValue,phoneNumberValue,addressValue,cityValue,zipValue)){
+                                        navigator.navigate(direction = LoginViewDestination)
+                                    }
+                                }
+                             },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
                 Text(text = "Finish", fontSize = 24.sp,
                     modifier = Modifier.size(width = 128.dp, height = 36.dp),

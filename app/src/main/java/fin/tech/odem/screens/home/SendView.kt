@@ -32,16 +32,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.R
 import fin.tech.odem.screens.destinations.HomeViewDestination
+import fin.tech.odem.viewModels.SendViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
 fun SendView(navigator: DestinationsNavigator) {
+    val sendViewModel = SendViewModel()
     var amountValue by remember {mutableStateOf("")} //Parse to double to use it
+    var receiverValue by remember {mutableStateOf("")}
     Box (modifier = Modifier
         .fillMaxSize()
         .padding(start = 16.dp, end = 16.dp, top = 8.dp)){
@@ -77,8 +82,8 @@ fun SendView(navigator: DestinationsNavigator) {
                     )
                     Spacer(modifier = Modifier.padding(vertical = 24.dp))
                     TextField(
-                        value = amountValue,
-                        onValueChange = { amountValue = it },
+                        value = receiverValue,
+                        onValueChange = { receiverValue = it },
                         placeholder = { Text("For Who?") },
                         label = { Text(text = "For Who?")},
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -92,7 +97,13 @@ fun SendView(navigator: DestinationsNavigator) {
                     )
                     Spacer(modifier = Modifier.padding(vertical = 20.dp))
                     Column(modifier = Modifier.align(alignment = CenterHorizontally)) {
-                        Button(onClick = {/*TODO*/},
+                        Button(onClick = {
+                                         sendViewModel.viewModelScope.launch {
+                                                if(sendViewModel.sendMoney(amountValue.toDouble(), receiverValue)){
+                                                    navigator.navigate(direction = HomeViewDestination)
+                                                }
+                                         }
+                                         },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
                             Text(text = "Send", fontSize = 24.sp,
                                 modifier = Modifier.size(width = 128.dp, height = 36.dp),
