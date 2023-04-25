@@ -86,7 +86,7 @@ fun HomePaymentsView() {
                     Text(text = "No transactions yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 }
             }else{
-                items(count = 6){
+                items(AppClient.client.wallet.transactions.take(6).size){
                         i->
                     run {
                         Row(

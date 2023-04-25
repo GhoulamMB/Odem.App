@@ -1,6 +1,7 @@
 package fin.tech.odem.utils
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import fin.tech.odem.data.models.Client
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -8,11 +9,14 @@ import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
 import io.ktor.util.InternalAPI
+import java.util.Date
 
 suspend fun loginRequest(email:String, password:String):Boolean{
     val client = HttpClient()
     val response = client.get("http://85.215.99.211:5000/api/Login/login?email=$email&password=$password")
-    val gson = Gson()
+    val gson = GsonBuilder()
+        .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
+        .create()
     val body = response.bodyAsText()
     val clientResponse = gson.fromJson(body, Client::class.java)
     AppClient.client = clientResponse
