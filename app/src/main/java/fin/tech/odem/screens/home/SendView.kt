@@ -71,7 +71,7 @@ fun SendView(navigator: DestinationsNavigator) {
                         onValueChange = { amountValue = it },
                         placeholder = { Text("Amount") },
                         label = { Text(text = "Amount")},
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth(),
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color.Transparent,

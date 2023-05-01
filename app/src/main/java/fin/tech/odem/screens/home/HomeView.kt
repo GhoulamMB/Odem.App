@@ -96,10 +96,10 @@ fun Balance() {
             Spacer(modifier = Modifier.padding(vertical = 18.dp))
             Row {
                 Text(text = "${AppClient.client.wallet.balance} DZD", color = Color.White, fontSize = 16.sp)
-                Row(modifier = Modifier.fillMaxWidth(),
+                /*Row(modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End) {
                     Text(text = "**** **** 1234", color = Color.White)
-                }
+                }*/
             }
         }
     }

@@ -1,6 +1,7 @@
 package fin.tech.odem.screens.login
 
 
+import androidx.compose.foundation.background
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +25,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,6 +33,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewModelScope
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -38,12 +42,13 @@ import fin.tech.odem.viewModels.LoginViewModel
 import kotlinx.coroutines.launch
 
 @Destination
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LoginView(navigator: DestinationsNavigator) {
     var emailValue by remember { mutableStateOf("") }
     var passwordValue by remember { mutableStateOf("") }
     val loginViewModel = LoginViewModel()
+    var showAlertDialog by remember {mutableStateOf(false)}
     Box (
         modifier = Modifier
             .fillMaxSize()
@@ -95,9 +100,10 @@ fun LoginView(navigator: DestinationsNavigator) {
             Spacer(modifier = Modifier.padding(vertical = 32.dp))
             Button(onClick = {
                                     loginViewModel.viewModelScope.launch {
-                                        val result = loginViewModel.Login(emailValue, passwordValue)
-                                        if (result) {
+                                        if(loginViewModel.Login(emailValue, passwordValue)){
                                             navigator.navigate(direction = HomeViewDestination)
+                                        }else{
+                                            showAlertDialog = true
                                         }
                                     }
                              },
@@ -105,6 +111,30 @@ fun LoginView(navigator: DestinationsNavigator) {
                 Text(text = "Login", fontSize = 24.sp,
                     modifier = Modifier.size(width = 128.dp, height = 36.dp),
                     textAlign = TextAlign.Center)
+            }
+            if(showAlertDialog){
+                AlertDialog(
+                    containerColor = Color(0xFF2E2E2E),
+                    onDismissRequest = {
+                        showAlertDialog = false
+                    },
+                    title = {
+                        Text(text = "Login Failed")
+                    },
+                    text = {
+                        Text(text = "Invalid email or password.")
+                    },
+                    confirmButton = {
+                        Button(
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
+                            onClick = {
+                                showAlertDialog = false
+                            }
+                        ) {
+                            Text(text = "OK")
+                        }
+                    }
+                )
             }
         }
     }
