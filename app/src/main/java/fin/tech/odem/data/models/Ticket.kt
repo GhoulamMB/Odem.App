@@ -18,5 +18,5 @@ data class Ticket(
     @Contextual
     val closeDate: Date,
     val handledBy:String,
-    val messages:Array<Message>
+    var messages:Array<Message>
 ) : Parcelable

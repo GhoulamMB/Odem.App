@@ -99,12 +99,12 @@ fun HomePaymentsView() {
                             if(AppClient.client.wallet.transactions[i].fromName == null){
                                 Text(text = "${AppClient.client.wallet.transactions[i].toName}", color = Color.White)
                                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterEnd){
-                                    Text(text = "-${AppClient.client.wallet.transactions[i].amount} DZD", color = Color.White)
+                                    Text(text = "+${AppClient.client.wallet.transactions[i].amount} DZD", color = Color.White)
                                 }
                             }else{
                                 Text(text = "${AppClient.client.wallet.transactions[i].fromName}", color = Color.White)
                                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterEnd){
-                                    Text(text = "+${AppClient.client.wallet.transactions[i].amount} DZD", color = Color.White)
+                                    Text(text = "-${AppClient.client.wallet.transactions[i].amount} DZD", color = Color.White)
                                 }
                             }
                         }

@@ -1,11 +1,14 @@
 package fin.tech.odem.utils
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import fin.tech.odem.data.models.Client
+import fin.tech.odem.data.models.Message
+import fin.tech.odem.data.models.Ticket
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
 import io.ktor.util.InternalAPI
@@ -77,4 +80,56 @@ suspend fun transactionRequest(amount:Double, toEmail:String):Boolean{
         return true
     }
     return false
+}
+
+suspend fun createTicketRequest(message:String, userId:String):Boolean{
+    val url = "http://85.215.99.211:5000/api/Support/createticket?message=$message&userId=$userId"
+    val client = HttpClient()
+    val response = client.get(url)
+    val gson = GsonBuilder()
+        .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
+        .create()
+    val body = response.bodyAsText()
+    val ticketResponse = gson.fromJson(body, Ticket::class.java)
+    if(ticketResponse != null){
+        AppClient.client.tickets = fetchTicketsRequest(userId).toTypedArray()
+        return true
+    }
+    return false
+}
+
+suspend fun sendMessageRequest(message: String,ticketId:String):Boolean{
+    val url = "http://85.215.99.211:5000/api/Support/updateticket?ticketId=$ticketId&message=$message"
+    val client = HttpClient()
+    val response = client.put(url)
+    if(response.status.value == 200){
+        AppClient.client.tickets = fetchTicketsRequest(AppClient.client.uid).toTypedArray()
+        return true
+    }
+    return false
+}
+
+suspend fun fetchTicketMessagesRequest(ticketId: String): List<Message> {
+    val url = "http://85.215.99.211:5000/api/Support/ticket?id=$ticketId"
+    val client = HttpClient()
+    val response = client.get(url)
+    val gson = GsonBuilder()
+        .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
+        .create()
+    val body = response.bodyAsText()
+    return gson.fromJson(body, object : TypeToken<List<Message>>() {}.type)
+}
+suspend fun fetchTicketsRequest(userId: String):List<Ticket>{
+    val url = "http://85.215.99.211:5000/api/Support/tickets?userId=$userId"
+    val client = HttpClient()
+    val response = client.get(url)
+    val gson = GsonBuilder()
+        .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
+        .create()
+    val body = response.bodyAsText()
+    val ticketsResponse:List<Ticket> = gson.fromJson(body, object : TypeToken<List<Ticket>>() {}.type)
+    if(ticketsResponse != null){
+        return ticketsResponse;
+    }
+    return emptyList()
 }

@@ -33,16 +33,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import fin.tech.odem.R
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.data.models.Ticket
 import fin.tech.odem.screens.destinations.SupportViewDestination
+import fin.tech.odem.viewModels.TicketInformationsViewModel
+import kotlinx.coroutines.launch
 
 @Destination
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketInformationsScreen(navigator: DestinationsNavigator,ticket: Ticket) {
+    val viewModel = TicketInformationsViewModel();
     var messageValue by remember { mutableStateOf("")}
     Box(modifier = Modifier
         .fillMaxSize()
@@ -97,7 +101,13 @@ fun TicketInformationsScreen(navigator: DestinationsNavigator,ticket: Ticket) {
                     shape = RoundedCornerShape(4.dp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
-                Button(onClick = { /*TODO*/ }, modifier = Modifier.height(46.dp)) {
+                Button(onClick = {
+                                 viewModel.viewModelScope.launch {
+                                     if(viewModel.sendMessage(messageValue,ticket.id)){
+                                         ticket.messages = viewModel.fetchMessages(ticket.id).toTypedArray()
+                                     }
+                                 }
+                }, modifier = Modifier.height(46.dp)) {
                     Text(text = "Send")
                 }
             }

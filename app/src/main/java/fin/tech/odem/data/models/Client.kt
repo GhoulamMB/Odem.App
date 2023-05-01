@@ -6,4 +6,4 @@ data class Client(val uid:String,val firstName:String,val lastName:String,val em
                                  val password:String,
                                  val address:Address,
                                  val wallet:Wallet,
-                                 val tickets:Array<Ticket>)
+                                 var tickets:Array<Ticket>)
