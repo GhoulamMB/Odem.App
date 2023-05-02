@@ -3,4 +3,4 @@ package fin.tech.odem.data.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Wallet(val id:String,val balance:Double,val transactions:Array<OdemTransfer>)
+data class Wallet(val id:String, var balance:Double, var transactions:Array<OdemTransfer>)

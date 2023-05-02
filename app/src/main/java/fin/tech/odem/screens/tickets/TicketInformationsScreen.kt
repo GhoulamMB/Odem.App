@@ -21,9 +21,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +49,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun TicketInformationsScreen(navigator: DestinationsNavigator,ticket: Ticket) {
     val viewModel = TicketInformationsViewModel();
+    var messages = viewModel.messages.collectAsState()
+
     var messageValue by remember { mutableStateOf("")}
     Box(modifier = Modifier
         .fillMaxSize()
@@ -65,7 +69,7 @@ fun TicketInformationsScreen(navigator: DestinationsNavigator,ticket: Ticket) {
             }
             Spacer(modifier = Modifier.padding(vertical = 18.dp))
             LazyColumn{
-                items(ticket.messages.size){
+                items(messages.value.size){
                     i->
                     run {
                         Row(
@@ -76,8 +80,8 @@ fun TicketInformationsScreen(navigator: DestinationsNavigator,ticket: Ticket) {
                                 .padding(start = 8.dp, end = 8.dp)
                                 , verticalAlignment = Alignment.CenterVertically
                         ){
-                            var prefix = if(ticket.messages[i].isClientMessage) "You: " else "Admin: "
-                            Text(text = prefix+ticket.messages[i].content,color = Color.White, modifier = Modifier.padding(start = 6.dp))
+                            var prefix = if(messages.value[i].isClientMessage) "You: " else "Admin: "
+                            Text(text = prefix+messages.value[i].content,color = Color.White, modifier = Modifier.padding(start = 6.dp))
                         }
                         Spacer(modifier = Modifier.padding(vertical = 6.dp))
                     }
@@ -103,10 +107,9 @@ fun TicketInformationsScreen(navigator: DestinationsNavigator,ticket: Ticket) {
                 )
                 Button(onClick = {
                                  viewModel.viewModelScope.launch {
-                                     if(viewModel.sendMessage(messageValue,ticket.id)){
-                                         ticket.messages = viewModel.fetchMessages(ticket.id).toTypedArray()
-                                     }
+                                     viewModel.sendMessage(messageValue,ticket.id)
                                  }
+
                 }, modifier = Modifier.height(46.dp)) {
                     Text(text = "Send")
                 }

@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import fin.tech.odem.data.models.Client
 import fin.tech.odem.data.models.Message
+import fin.tech.odem.data.models.OdemTransfer
 import fin.tech.odem.data.models.Ticket
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -12,6 +13,7 @@ import io.ktor.client.request.put
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
 import io.ktor.util.InternalAPI
+import kotlinx.coroutines.flow.StateFlow
 import java.util.Date
 
 suspend fun loginRequest(email:String, password:String):Boolean{
@@ -82,6 +84,21 @@ suspend fun transactionRequest(amount:Double, toEmail:String):Boolean{
     return false
 }
 
+suspend fun fetchTransactions(userId: String):List<OdemTransfer>{
+    val url = "http://85.215.99.211:5000/api/Transactions?userId=$userId"
+    val client = HttpClient()
+    val response = client.get(url)
+    val gson = GsonBuilder()
+        .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
+        .create()
+    val body = response.bodyAsText()
+    val transactions:List<OdemTransfer> = gson.fromJson(body, object : TypeToken<List<OdemTransfer>>() {}.type)
+    if(transactions != null){
+        return transactions
+    }
+    return emptyList()
+}
+
 suspend fun createTicketRequest(message:String, userId:String):Boolean{
     val url = "http://85.215.99.211:5000/api/Support/createticket?message=$message&userId=$userId"
     val client = HttpClient()
@@ -109,7 +126,7 @@ suspend fun sendMessageRequest(message: String,ticketId:String):Boolean{
     return false
 }
 
-suspend fun fetchTicketMessagesRequest(ticketId: String): List<Message> {
+suspend fun fetchTicketMessagesRequest(ticketId: String): StateFlow<List<Message>> {
     val url = "http://85.215.99.211:5000/api/Support/ticket?id=$ticketId"
     val client = HttpClient()
     val response = client.get(url)

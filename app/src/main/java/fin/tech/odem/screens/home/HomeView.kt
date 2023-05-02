@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -87,6 +88,7 @@ fun SettingsSupportButton(navigator: DestinationsNavigator) {
 
 @Composable
 fun Balance() {
+    var balance = rememberUpdatedState(AppClient.client.wallet.balance)
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(100.dp)
@@ -95,11 +97,7 @@ fun Balance() {
             Text(text = "Your balance is", color = Color.White)
             Spacer(modifier = Modifier.padding(vertical = 18.dp))
             Row {
-                Text(text = "${AppClient.client.wallet.balance} DZD", color = Color.White, fontSize = 16.sp)
-                /*Row(modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End) {
-                    Text(text = "**** **** 1234", color = Color.White)
-                }*/
+                Text(text = "${balance.value} DZD", color = Color.White, fontSize = 16.sp)
             }
         }
     }

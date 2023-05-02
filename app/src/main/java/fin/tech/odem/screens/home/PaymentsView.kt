@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +34,7 @@ import fin.tech.odem.utils.AppClient
 @Destination
 @Composable
 fun PaymentsView(navigator: DestinationsNavigator) {
+    var transactionsState = rememberUpdatedState(AppClient.client.wallet.transactions)
     Box(modifier = Modifier.fillMaxSize().padding(start = 16.dp, end = 16.dp, top = 8.dp)) {
         Column {
             Row {
@@ -48,22 +50,31 @@ fun PaymentsView(navigator: DestinationsNavigator) {
             }
             Spacer(modifier = Modifier.padding(vertical = 18.dp))
             LazyColumn{
-                if (AppClient.client.wallet.transactions.isEmpty()) {
+                if (transactionsState.value.isEmpty()) {
                     item {
                         Text(text = "No transactions yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     }
                 }else{
-                    items(count = AppClient.client.wallet.transactions.size/*For now this should be sized to the list of transactions List*/){
+                    items(transactionsState.value.size){
                             i->
                         run {
                             Row(
                                 modifier = Modifier
-                                    .size(width = 380.dp, height = 40.dp)
-                                    .background(Color.Transparent)
+                                    .height(40.dp)
+                                    .fillMaxWidth()
+                                    .background(Color(0xFF303030), RoundedCornerShape(8.dp))
+                                    .padding(start = 8.dp, end = 8.dp)
                             ) {
-                                Text(text = "From someone", color = Color.White)
-                                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterEnd){
-                                    Text(text = "${AppClient.client.wallet.transactions[i].amount} DZD", color = Color.White)
+                                if(AppClient.client.wallet.transactions[i].fromName == null){
+                                    Text(text = "${AppClient.client.wallet.transactions[i].toName}", color = Color.White)
+                                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterEnd){
+                                        Text(text = "+${AppClient.client.wallet.transactions[i].amount} DZD", color = Color.White)
+                                    }
+                                }else{
+                                    Text(text = "${AppClient.client.wallet.transactions[i].fromName}", color = Color.White)
+                                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterEnd){
+                                        Text(text = "-${AppClient.client.wallet.transactions[i].amount} DZD", color = Color.White)
+                                    }
                                 }
                             }
                             Spacer(modifier = Modifier.padding(vertical = 6.dp))
@@ -79,6 +90,7 @@ fun PaymentsView(navigator: DestinationsNavigator) {
 }
 @Composable
 fun HomePaymentsView() {
+    var transactionState = rememberUpdatedState(AppClient.client.wallet.transactions)
     Box {
         LazyColumn{
             if(AppClient.client.wallet.transactions.isEmpty()){
@@ -86,7 +98,7 @@ fun HomePaymentsView() {
                     Text(text = "No transactions yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 }
             }else{
-                items(AppClient.client.wallet.transactions.take(6).size){
+                items(transactionState.value.take(6).size){
                         i->
                     run {
                         Row(
