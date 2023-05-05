@@ -36,6 +36,7 @@ import androidx.navigation.navOptions
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.R
+import fin.tech.odem.screens.destinations.CreateTicketScreenDestination
 import fin.tech.odem.screens.destinations.HomeViewDestination
 import fin.tech.odem.screens.destinations.TicketInformationsScreenDestination
 import fin.tech.odem.utils.AppClient
@@ -89,7 +90,9 @@ fun SupportView(navigator: DestinationsNavigator) {
         Box (modifier = Modifier
             .align(alignment = Alignment.BottomCenter)
             .padding(vertical = 16.dp)){
-            Button(onClick = {},
+            Button(onClick = {
+                             navigator.navigate(direction = CreateTicketScreenDestination)
+            },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
                 Text(text = "Contact Support", fontSize = 16.sp,
                     modifier = Modifier.size(width = 124.dp, height = 24.dp),

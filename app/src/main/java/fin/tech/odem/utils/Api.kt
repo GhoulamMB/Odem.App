@@ -113,10 +113,10 @@ suspend fun fetchTransactions(userId: String):List<OdemTransfer>{
     return emptyList()
 }
 
-suspend fun createTicketRequest(message:String, userId:String):Boolean{
+suspend fun createTicketRequest(message:String, userId:String):Ticket{
     val url = "http://85.215.99.211:5000/api/Support/createticket?message=$message&userId=$userId"
     val client = HttpClient()
-    val response = client.get(url)
+    val response = client.post(url)
     val gson = GsonBuilder()
         .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
         .create()
@@ -124,9 +124,8 @@ suspend fun createTicketRequest(message:String, userId:String):Boolean{
     val ticketResponse = gson.fromJson(body, Ticket::class.java)
     if(ticketResponse != null){
         AppClient.client.tickets = fetchTicketsRequest(userId).toTypedArray()
-        return true
     }
-    return false
+    return ticketResponse
 }
 
 suspend fun sendMessageRequest(message: String,ticketId:String):Message?{
