@@ -1,5 +1,6 @@
 package fin.tech.odem.screens.tickets
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,7 +26,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,17 +39,23 @@ import androidx.lifecycle.viewModelScope
 import fin.tech.odem.R
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import fin.tech.odem.data.models.Ticket
 import fin.tech.odem.screens.destinations.SupportViewDestination
+import fin.tech.odem.utils.AppClient
 import fin.tech.odem.viewModels.TicketInformationsViewModel
 import kotlinx.coroutines.launch
 
+@SuppressLint("StateFlowValueCalledInComposition", "MutableCollectionMutableState")
 @Destination
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TicketInformationsScreen(navigator: DestinationsNavigator,ticket: Ticket) {
-    val viewModel = TicketInformationsViewModel();
-    var messages = viewModel.messages.collectAsState()
+fun TicketInformationsScreen(navigator: DestinationsNavigator,tickedId: String) {
+    val messagesList = AppClient.client.tickets
+        .asList()
+        .last { t->t.id == tickedId }
+        .messages.sortedBy { m->m.timestamp }
+
+    val viewModel = TicketInformationsViewModel(messagesList)
+    val messages by viewModel.Messages.collectAsState()
 
     var messageValue by remember { mutableStateOf("")}
     Box(modifier = Modifier
@@ -69,7 +75,7 @@ fun TicketInformationsScreen(navigator: DestinationsNavigator,ticket: Ticket) {
             }
             Spacer(modifier = Modifier.padding(vertical = 18.dp))
             LazyColumn{
-                items(messages.value.size){
+                items(messages.size){
                     i->
                     run {
                         Row(
@@ -80,8 +86,8 @@ fun TicketInformationsScreen(navigator: DestinationsNavigator,ticket: Ticket) {
                                 .padding(start = 8.dp, end = 8.dp)
                                 , verticalAlignment = Alignment.CenterVertically
                         ){
-                            var prefix = if(messages.value[i].isClientMessage) "You: " else "Admin: "
-                            Text(text = prefix+messages.value[i].content,color = Color.White, modifier = Modifier.padding(start = 6.dp))
+                            val prefix = if(messages[i].isClientMessage) "You: " else "Admin: "
+                            Text(text = prefix+messages[i].content,color = Color.White, modifier = Modifier.padding(start = 6.dp))
                         }
                         Spacer(modifier = Modifier.padding(vertical = 6.dp))
                     }
@@ -106,9 +112,12 @@ fun TicketInformationsScreen(navigator: DestinationsNavigator,ticket: Ticket) {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
                 Button(onClick = {
-                                 viewModel.viewModelScope.launch {
-                                     viewModel.sendMessage(messageValue,ticket.id)
-                                 }
+                    viewModel.viewModelScope.launch {
+                        val message = viewModel.sendMessage(messageValue,tickedId)
+                        if(message != null){
+                            messageValue = ""
+                        }
+                    }
 
                 }, modifier = Modifier.height(46.dp)) {
                     Text(text = "Send")

@@ -31,6 +31,20 @@ suspend fun loginRequest(email:String, password:String):Boolean{
     return false
 }
 
+suspend fun loginWithTokenRequest(token:String):Boolean{
+    val client = HttpClient()
+    val response = client.get("http://85.215.99.211:5000/api/Login/loginwithtoken?token=$token")
+    val gson = GsonBuilder()
+        .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
+        .create()
+    val body = response.bodyAsText()
+    val clientResponse = gson.fromJson(body, Client::class.java)
+    AppClient.client = clientResponse
+    if(clientResponse != null){
+        return true
+    }
+    return false
+}
 @OptIn(InternalAPI::class)
 suspend fun registerRequest(email:String, password:String, firstName:String, lastName:String, phone:String, street:String, city:String, zip:String):Boolean{
     val url = "http://85.215.99.211:5000/api/Register"
@@ -115,18 +129,21 @@ suspend fun createTicketRequest(message:String, userId:String):Boolean{
     return false
 }
 
-suspend fun sendMessageRequest(message: String,ticketId:String):Boolean{
+suspend fun sendMessageRequest(message: String,ticketId:String):Message?{
     val url = "http://85.215.99.211:5000/api/Support/updateticket?ticketId=$ticketId&message=$message"
     val client = HttpClient()
     val response = client.put(url)
+    val gson = GsonBuilder()
+        .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
+        .create()
+    val body = response.bodyAsText()
     if(response.status.value == 200){
-        AppClient.client.tickets = fetchTicketsRequest(AppClient.client.uid).toTypedArray()
-        return true
+        return gson.fromJson(body,Message::class.java)
     }
-    return false
+    return null
 }
 
-suspend fun fetchTicketMessagesRequest(ticketId: String): StateFlow<List<Message>> {
+suspend fun fetchTicketMessagesRequest(ticketId: String): Ticket? {
     val url = "http://85.215.99.211:5000/api/Support/ticket?id=$ticketId"
     val client = HttpClient()
     val response = client.get(url)
@@ -134,7 +151,7 @@ suspend fun fetchTicketMessagesRequest(ticketId: String): StateFlow<List<Message
         .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
         .create()
     val body = response.bodyAsText()
-    return gson.fromJson(body, object : TypeToken<List<Message>>() {}.type)
+    return gson.fromJson(body, Ticket::class.java)
 }
 suspend fun fetchTicketsRequest(userId: String):List<Ticket>{
     val url = "http://85.215.99.211:5000/api/Support/tickets?userId=$userId"

@@ -25,7 +25,9 @@ class MainActivity : ComponentActivity() {
                         .background(Color(0xFF1A1A1A))
                         .padding(top = 64.dp, bottom = 32.dp)
                 ){
-                    DestinationsNavHost(navGraph = NavGraphs.root)
+                    DestinationsNavHost(
+                        navGraph = NavGraphs.root
+                    )
                 }
             }
         }
