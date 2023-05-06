@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -42,6 +43,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterView(navigator: DestinationsNavigator) {
+    var showAlertDialog by remember {mutableStateOf(false)}
+    var isTermsChecked by remember { mutableStateOf(false) }
     Box (
         modifier = Modifier
             .fillMaxSize()
@@ -91,17 +94,50 @@ fun RegisterView(navigator: DestinationsNavigator) {
             )
             Spacer(modifier = Modifier.padding(vertical = 16.dp))
             Row {
-                Checkbox(checked = false, onCheckedChange ={isTermsCheck = it})
+                Checkbox(
+                    checked = isTermsChecked,
+                    onCheckedChange = { isChecked ->
+                        isTermsChecked = isChecked
+                    }
+                )
                 Text(text = "By registering, you agree to the General Agreement, the Terms of Use and the Privacy Policy", color = Color(0xFFAFAFAF))
             }
             Spacer(modifier = Modifier.padding(vertical = 32.dp))
             Button(onClick = {
-                navigator.navigate(direction = PersonalInformationsViewDestination(emailValue,passwordValue))
-            },
+                if(emailValue.isNotBlank() && passwordValue.isNotBlank() && isTermsChecked){
+                    navigator.navigate(direction = PersonalInformationsViewDestination(emailValue,passwordValue))
+                }else{
+                    showAlertDialog = true
+                }
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
                 Text(text = "Register", fontSize = 24.sp,
                     modifier = Modifier.size(width = 128.dp, height = 36.dp),
                     textAlign = TextAlign.Center)
+            }
+            if(showAlertDialog){
+                AlertDialog(
+                    containerColor = Color(0xFF2E2E2E),
+                    onDismissRequest = {
+                        showAlertDialog = false
+                    },
+                    title = {
+                        Text(text = "Registration Failed")
+                    },
+                    text = {
+                        Text(text = "Invalid email or password format.")
+                    },
+                    confirmButton = {
+                        Button(
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
+                            onClick = {
+                                showAlertDialog = false
+                            }
+                        ) {
+                            Text(text = "OK")
+                        }
+                    }
+                )
             }
         }
     }
@@ -118,10 +154,11 @@ fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, pass
     var addressValue by remember { mutableStateOf("") }
     var zipValue by remember { mutableStateOf("") }
     var cityValue by remember { mutableStateOf("") }
+    var showAlertDialog by remember {mutableStateOf(false)}
     Box (
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 24.dp, start = 24.dp, end = 24.dp),
+            .padding(top = 24.dp, start = 24.dp, end = 0.dp),
     ){
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -210,7 +247,6 @@ fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, pass
                     focusedIndicatorColor = Color(0xFF536DFE),
                     cursorColor = Color(0xFF536DFE)
                 ),
-
                 )
             Spacer(modifier = Modifier.padding(vertical = 18.dp))
             TextField(
@@ -228,11 +264,24 @@ fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, pass
                     cursorColor = Color(0xFF536DFE)
                 )
                 )
-            Spacer(modifier = Modifier.padding(/*vertical = 24.dp*/))
+            Spacer(modifier = Modifier.padding(vertical = 12.dp))
             Button(onClick = {
                                 registerViewModel.viewModelScope.launch {
-                                    if(registerViewModel.register(email,password,firstNameValue,lastNameValue,phoneNumberValue,addressValue,cityValue,zipValue)){
-                                        navigator.navigate(direction = LoginViewDestination)
+                                    if(email.isNotBlank() ||
+                                        password.isNotBlank() ||
+                                        firstNameValue.isNotBlank() ||
+                                        lastNameValue.isNotBlank() ||
+                                        phoneNumberValue.isNotBlank() ||
+                                        addressValue.isNotBlank() ||
+                                        cityValue.isNotBlank() ||
+                                        zipValue.isNotBlank()){
+                                        if(registerViewModel.register(email,password,firstNameValue,lastNameValue,phoneNumberValue,addressValue,cityValue,zipValue)){
+                                            navigator.navigate(direction = LoginViewDestination)
+                                        }else{
+                                            showAlertDialog = true
+                                        }
+                                    }else{
+                                        showAlertDialog = true
                                     }
                                 }
                              },
@@ -240,6 +289,30 @@ fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, pass
                 Text(text = "Finish", fontSize = 24.sp,
                     modifier = Modifier.size(width = 128.dp, height = 36.dp),
                     textAlign = TextAlign.Center)
+            }
+            if(showAlertDialog){
+                AlertDialog(
+                    containerColor = Color(0xFF2E2E2E),
+                    onDismissRequest = {
+                        showAlertDialog = false
+                    },
+                    title = {
+                        Text(text = "Registration Failed")
+                    },
+                    text = {
+                        Text(text = "Check all fields are filled and correct")
+                    },
+                    confirmButton = {
+                        Button(
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
+                            onClick = {
+                                showAlertDialog = false
+                            }
+                        ) {
+                            Text(text = "OK")
+                        }
+                    }
+                )
             }
         }
     }

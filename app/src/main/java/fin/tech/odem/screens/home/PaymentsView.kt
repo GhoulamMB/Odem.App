@@ -34,7 +34,7 @@ import fin.tech.odem.utils.AppClient
 @Destination
 @Composable
 fun PaymentsView(navigator: DestinationsNavigator) {
-    var transactionsState = rememberUpdatedState(AppClient.client.wallet.transactions)
+    val transactionsState = rememberUpdatedState(AppClient.client.wallet.transactions)
     Box(modifier = Modifier.fillMaxSize().padding(start = 16.dp, end = 16.dp, top = 8.dp)) {
         Column {
             Row {
