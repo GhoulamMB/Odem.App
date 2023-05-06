@@ -1,5 +1,6 @@
 package fin.tech.odem.utils
 
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import fin.tech.odem.data.models.Client
@@ -165,4 +166,28 @@ suspend fun fetchTicketsRequest(userId: String):List<Ticket>{
         return ticketsResponse;
     }
     return emptyList()
+}
+
+suspend fun changeEmailRequest(email:String):Boolean{
+    val userId = AppClient.client.uid
+    val client = HttpClient()
+    val url = "http://85.215.99.211:5000/api/Accounts?userId=$userId&email=$email&password="
+    val response = client.put(url)
+    if(response.status.value == 200){
+        loginWithTokenRequest(AppClient.client.token)
+        return true
+    }
+    return false
+}
+
+suspend fun changePasswordRequest(password: String):Boolean{
+    val userId = AppClient.client.uid
+    val client = HttpClient()
+    val url = "http://85.215.99.211:5000/api/Accounts?userId=$userId&email=&password=$password"
+    val response = client.put(url)
+    if(response.status.value == 200){
+        loginWithTokenRequest(AppClient.client.token)
+        return true
+    }
+    return false
 }

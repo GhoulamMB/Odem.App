@@ -98,7 +98,7 @@ fun HomePaymentsView() {
                     Text(text = "No transactions yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 }
             }else{
-                items(transactionState.value.take(6).size){
+                items(transactionState.value.take(5).size){
                         i->
                     run {
                         Row(
