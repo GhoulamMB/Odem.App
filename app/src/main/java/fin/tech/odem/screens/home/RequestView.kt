@@ -1,18 +1,23 @@
 package fin.tech.odem.screens.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -30,30 +35,36 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.R
+import fin.tech.odem.data.models.TransferRequest
 import fin.tech.odem.screens.destinations.HomeViewDestination
-import fin.tech.odem.viewModels.SendViewModel
+import fin.tech.odem.screens.destinations.RequestViewDestination
+import fin.tech.odem.screens.destinations.TransferRequestViewDestination
+import fin.tech.odem.utils.AppClient
+import fin.tech.odem.viewModels.TransferRequestViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination
-@Preview
 @Composable
-fun RequestView(/*navigator: DestinationsNavigator*/) {
+fun RequestView(navigator: DestinationsNavigator) {
+    val viewModel = viewModel<TransferRequestViewModel>()
     var amountValue by remember { mutableStateOf("") } //Parse to double to use it
     var receiverValue by remember { mutableStateOf("") }
+    var reasonValue by remember { mutableStateOf("") }
+
     Box (modifier = Modifier
         .fillMaxSize()
         .padding(start = 16.dp, end = 16.dp, top = 8.dp)){
         Column {
             Row {
-                IconButton(onClick = { /*navigator.navigate(direction = HomeViewDestination)*/ }) {
+                IconButton(onClick = { navigator.navigate(direction = HomeViewDestination) }) {
                     Image(modifier = Modifier.size(48.dp),painter = painterResource(id = R.drawable.back), contentDescription ="back")
                 }
                 Text(text = "Request Money",
@@ -96,10 +107,28 @@ fun RequestView(/*navigator: DestinationsNavigator*/) {
                             cursorColor = Color(0xFF536DFE)
                         )
                     )
+                    Spacer(modifier = Modifier.padding(vertical = 24.dp))
+                    TextField(
+                        value = reasonValue,
+                        onValueChange = { reasonValue = it },
+                        placeholder = { Text("For Who?") },
+                        label = { Text(text = "For Who?") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = TextFieldDefaults.textFieldColors(
+                            containerColor = Color.Transparent,
+                            focusedLabelColor = Color(0xFF536DFE),
+                            focusedIndicatorColor = Color(0xFF536DFE),
+                            cursorColor = Color(0xFF536DFE)
+                        )
+                    )
                     Spacer(modifier = Modifier.padding(vertical = 20.dp))
                     Column(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
                         Button(onClick = {
-
+                                         viewModel.viewModelScope.launch{
+                                             viewModel.createRequest(receiverValue,amountValue.toDouble(),reasonValue)
+                                             navigator.navigate(direction = HomeViewDestination)
+                                         }
                         },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
                             Text(text = "Send", fontSize = 24.sp,
@@ -109,8 +138,99 @@ fun RequestView(/*navigator: DestinationsNavigator*/) {
                     }
                 }
             }
-            LazyColumn{
+            Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+            Text(text = "Recieved Requests", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(vertical = 8.dp))
+            if(AppClient.client.recievedRequests != null){
+                val recievedRequests by remember {
+                    mutableStateOf(AppClient.client.recievedRequests)
+                }
+                LazyColumn{
+                    if(recievedRequests.isEmpty()){
+                        item {
+                            Text(text = "No requests yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }else{
+                        items(recievedRequests.size){
+                                i->
+                            run {
+                                if(!recievedRequests[i].checked){
+                                    Button(onClick = { navigator.navigate(direction = TransferRequestViewDestination(recievedRequests[i])) },
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                                        shape = RoundedCornerShape(4.dp)) {
+                                        Row(modifier = Modifier
+                                            .height(40.dp)
+                                            .fillMaxWidth()
+                                            .background(Color(0xFF303030), RoundedCornerShape(8.dp))
+                                            .padding(start = 8.dp, end = 8.dp)) {
+                                            Column {
+                                                Text(text = recievedRequests[i].from)
+                                                Text(text = "${recievedRequests[i].amount} DZD")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
+@Destination
+@Composable
+fun TransferRequestView(navigator: DestinationsNavigator,transferRequest: TransferRequest) {
+    val viewModel = viewModel<TransferRequestViewModel>()
+    Box (modifier = Modifier
+        .fillMaxSize()
+        .padding(start = 16.dp, end = 16.dp, top = 8.dp)){
+        Column {
+            Row {
+                IconButton(onClick = { navigator.navigate(direction = HomeViewDestination) }) {
+                    Image(modifier = Modifier.size(48.dp),painter = painterResource(id = R.drawable.back), contentDescription ="back")
+                }
+                Text(text = "Request Details",
+                    color = Color.White,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+            }
+            Column(modifier = Modifier.padding(vertical = 16.dp)) {
+                Row {
+                    Text(text = "From:         ${transferRequest.from}", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                }
+                Row(modifier = Modifier.padding(vertical = 16.dp)) {
+                    Text(text = "Amount:    ${transferRequest.amount}", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                }
+                Row(modifier = Modifier.padding(vertical = 16.dp)) {
+                    Text(text = "Reason:     ${transferRequest.reason}", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                }
+                Row(modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp),horizontalArrangement = Arrangement.SpaceEvenly) {
+                    Button(onClick = {
+                                     viewModel.viewModelScope.launch {
+                                         viewModel.acceptRequest(transferRequest.id)
+                                         navigator.navigate(direction = RequestViewDestination)
+                                     }
+                    },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
+                        Text(text = "Accept", fontSize = 16.sp,
+                            modifier = Modifier.size(width = 64.dp, height = 18.dp),
+                            textAlign = TextAlign.Center)
+                    }
+                    Button(onClick = {
+                        viewModel.viewModelScope.launch {
+                            viewModel.declineRequest(transferRequest.id)
+                            navigator.navigate(direction = RequestViewDestination)
+                        }
+                                     },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
+                        Text(text = "Reject", fontSize = 16.sp,
+                            modifier = Modifier.size(width = 64.dp, height = 18.dp),
+                            textAlign = TextAlign.Center)
+                    }
+                }
             }
         }
     }

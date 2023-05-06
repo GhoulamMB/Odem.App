@@ -26,6 +26,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.R
 import fin.tech.odem.screens.destinations.HomeViewDestination
 import fin.tech.odem.screens.destinations.PaymentsViewDestination
+import fin.tech.odem.screens.destinations.RequestViewDestination
 import fin.tech.odem.screens.destinations.SendViewDestination
 import fin.tech.odem.screens.destinations.WalletViewDestination
 @Destination
@@ -40,7 +41,7 @@ fun BottomBar(navigator: DestinationsNavigator, isHomeSelected: Boolean =false, 
                         modifier = Modifier.size(width = 64.dp, height = 18.dp),
                         textAlign = TextAlign.Center)
                 }
-                Button(onClick = {/*TODO*/},
+                Button(onClick = {navigator.navigate(direction = RequestViewDestination)},
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
                     Text(text = "Request", fontSize = 16.sp,
                         modifier = Modifier.size(width = 64.dp, height = 18.dp),

@@ -1,3 +1,5 @@
+@file:Suppress("SENSELESS_COMPARISON")
+
 package fin.tech.odem.utils
 
 import com.google.gson.Gson
@@ -190,4 +192,36 @@ suspend fun changePasswordRequest(password: String):Boolean{
         return true
     }
     return false
+}
+
+suspend fun createTransferRequest(reciever: String,value: Double,reason:String): Boolean {
+    val url = "http://85.215.99.211:5000/api/Transactions/TransferRequest?from=${AppClient.client.email}&to=$reciever&amount=$value&reason=$reason"
+    val client = HttpClient()
+    val response = client.post(url)
+    if(response.status.value == 200){
+        loginWithTokenRequest(AppClient.client.token)
+        return true
+    }
+    return false
+}
+suspend fun acceptTransferRequest(transferId:String):Boolean {
+    val url = "http://85.215.99.211:5000/api/Transactions/AcceptTransferRequest?Id=$transferId"
+    val client = HttpClient()
+    val response = client.post(url)
+    if(response.status.value == 200){
+        loginWithTokenRequest(AppClient.client.token)
+        return true
+    }
+    return false;
+}
+
+suspend fun declineTransferRequest(transferId: String):Boolean{
+    val url = "http://85.215.99.211:5000/api/Transactions/DeclineTransferRequest?Id=$transferId"
+    val client = HttpClient()
+    val response = client.post(url)
+    if(response.status.value == 200){
+        loginWithTokenRequest(AppClient.client.token)
+        return true
+    }
+    return false;
 }
