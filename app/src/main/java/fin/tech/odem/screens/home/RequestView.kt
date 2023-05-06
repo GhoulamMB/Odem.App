@@ -111,8 +111,8 @@ fun RequestView(navigator: DestinationsNavigator) {
                     TextField(
                         value = reasonValue,
                         onValueChange = { reasonValue = it },
-                        placeholder = { Text("For Who?") },
-                        label = { Text(text = "For Who?") },
+                        placeholder = { Text("Reason") },
+                        label = { Text(text = "Reason") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                         modifier = Modifier.fillMaxWidth(),
                         colors = TextFieldDefaults.textFieldColors(
@@ -126,6 +126,7 @@ fun RequestView(navigator: DestinationsNavigator) {
                     Column(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
                         Button(onClick = {
                                          viewModel.viewModelScope.launch{
+                                             //validate reciever email on release version
                                              viewModel.createRequest(receiverValue,amountValue.toDouble(),reasonValue)
                                              navigator.navigate(direction = HomeViewDestination)
                                          }

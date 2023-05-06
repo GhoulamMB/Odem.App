@@ -103,6 +103,8 @@ fun LoginView(navigator: DestinationsNavigator) {
                                     loginViewModel.viewModelScope.launch {
                                         if(emailValue.isNotBlank() && passwordValue.isNotBlank()){
                                             if(loginViewModel.Login(emailValue, passwordValue)){
+                                                emailValue = ""
+                                                passwordValue=""
                                                 navigator.navigate(direction = HomeViewDestination)
                                             }else{
                                                 showAlertDialog = true

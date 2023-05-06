@@ -99,6 +99,7 @@ fun SendView(navigator: DestinationsNavigator) {
                     Column(modifier = Modifier.align(alignment = CenterHorizontally)) {
                         Button(onClick = {
                                          sendViewModel.viewModelScope.launch {
+                                             //validate reciever email on release version
                                                 if(sendViewModel.sendMoney(amountValue.toDouble(), receiverValue)){
                                                     navigator.navigate(direction = HomeViewDestination)
                                                 }
