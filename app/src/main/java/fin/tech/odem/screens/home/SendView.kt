@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,6 +48,8 @@ fun SendView(navigator: DestinationsNavigator) {
     val sendViewModel = SendViewModel()
     var amountValue by remember {mutableStateOf("")} //Parse to double to use it
     var receiverValue by remember {mutableStateOf("")}
+    var showConfirmationAlertDialog by remember {mutableStateOf(false)}
+    var showErrorAlertDialog by remember {mutableStateOf(false)}
     Box (modifier = Modifier
         .fillMaxSize()
         .padding(start = 16.dp, end = 16.dp, top = 8.dp)){
@@ -98,12 +101,12 @@ fun SendView(navigator: DestinationsNavigator) {
                     Spacer(modifier = Modifier.padding(vertical = 20.dp))
                     Column(modifier = Modifier.align(alignment = CenterHorizontally)) {
                         Button(onClick = {
-                                         sendViewModel.viewModelScope.launch {
-                                             //validate reciever email on release version
-                                                if(sendViewModel.sendMoney(amountValue.toDouble(), receiverValue)){
-                                                    navigator.navigate(direction = HomeViewDestination)
-                                                }
-                                         }
+                                            //validate reciever email on release version
+                                            if(amountValue.isNotBlank() && receiverValue.isNotBlank()){
+                                                showConfirmationAlertDialog = true
+                                            }else{
+                                                showErrorAlertDialog = true
+                                            }
                                          },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
                             Text(text = "Send", fontSize = 24.sp,
@@ -113,6 +116,59 @@ fun SendView(navigator: DestinationsNavigator) {
                     }
                 }
             }
+        }
+        if(showConfirmationAlertDialog){
+            AlertDialog(
+                containerColor = Color(0xFF2E2E2E),
+                onDismissRequest = {
+                    showConfirmationAlertDialog = false
+                },
+                title = {
+                    Text(text = "Confirmation")
+                },
+                text = {
+                    Text(text = "Are you sure you want to send $amountValue DZD to $receiverValue")
+                },
+                confirmButton = {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
+                        onClick = {
+                            sendViewModel.viewModelScope.launch {
+                                if(sendViewModel.sendMoney(amountValue.toDouble(), receiverValue)){
+                                    navigator.navigate(direction = HomeViewDestination)
+                                }
+                            }
+                            showConfirmationAlertDialog = false
+                        }
+                    ) {
+                        Text(text = "OK")
+                    }
+                }
+            )
+        }
+        if(showErrorAlertDialog){
+            AlertDialog(
+                containerColor = Color(0xFF2E2E2E),
+                onDismissRequest = {
+                    showErrorAlertDialog = false
+                },
+                title = {
+                    Text(text = "Error")
+                },
+                text = {
+                    Text(text = "Invalid email or amount.")
+                },
+                confirmButton = {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
+                        onClick = {
+                            showErrorAlertDialog = false
+                        }
+                    ) {
+                        Text(text = "OK")
+                    }
+                }
+            )
         }
     }
 }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
@@ -41,6 +42,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.R
 import fin.tech.odem.screens.BottomBar
 import fin.tech.odem.screens.destinations.ChangeEmailScreenDestination
+import fin.tech.odem.screens.destinations.ChangePasswordScreenDestination
 import fin.tech.odem.screens.destinations.HomeViewDestination
 import fin.tech.odem.screens.destinations.SettingsViewDestination
 import fin.tech.odem.utils.AppClient
@@ -79,7 +81,7 @@ fun SettingsView(navigator: DestinationsNavigator) {
                 }
             }
             Spacer(modifier = Modifier.padding(vertical = 16.dp))
-            Button(onClick = { navigator.navigate(direction = ChangeEmailScreenDestination) },
+            Button(onClick = { navigator.navigate(direction = ChangePasswordScreenDestination) },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Column {
@@ -105,6 +107,8 @@ fun ChangeEmailScreen(navigator: DestinationsNavigator) {
     var emailValue by remember {
         mutableStateOf(AppClient.client.email)
     }
+    var showErrorAlertDialog by remember {mutableStateOf(false)}
+    var showConfirmationAlertDialog by remember {mutableStateOf(false)}
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(start = 16.dp, end = 16.dp, top = 8.dp)){
@@ -140,9 +144,10 @@ fun ChangeEmailScreen(navigator: DestinationsNavigator) {
                 Spacer(modifier = Modifier.padding(vertical = 12.dp))
                 Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center) {
                     Button(onClick = {
-                                     viewModel.viewModelScope.launch {
-                                         viewModel.changeEmail(emailValue)
-                                         emailValue = AppClient.client.email
+                                     if(emailValue.isNotBlank() && emailValue != AppClient.client.email){
+                                         showConfirmationAlertDialog = true
+                                     }else{
+                                         showErrorAlertDialog = true
                                      }
                     },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
@@ -154,6 +159,58 @@ fun ChangeEmailScreen(navigator: DestinationsNavigator) {
             }
         }
     }
+    if(showConfirmationAlertDialog){
+        AlertDialog(
+            containerColor = Color(0xFF2E2E2E),
+            onDismissRequest = {
+                showConfirmationAlertDialog = false
+            },
+            title = {
+                Text(text = "Confirmation")
+            },
+            text = {
+                Text(text = "Are you sure you want to change your email?")
+            },
+            confirmButton = {
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
+                    onClick = {
+                        viewModel.viewModelScope.launch {
+                            viewModel.changeEmail(emailValue)
+                            emailValue = AppClient.client.email
+                            navigator.navigate(direction = SettingsViewDestination)
+                        }
+                    }
+                ) {
+                    Text(text = "OK")
+                }
+            }
+        )
+    }
+    if(showErrorAlertDialog){
+        AlertDialog(
+            containerColor = Color(0xFF2E2E2E),
+            onDismissRequest = {
+                showErrorAlertDialog = false
+            },
+            title = {
+                Text(text = "Error")
+            },
+            text = {
+                Text(text = "Invalid email format.")
+            },
+            confirmButton = {
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
+                    onClick = {
+                        showErrorAlertDialog = false
+                    }
+                ) {
+                    Text(text = "OK")
+                }
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -161,9 +218,9 @@ fun ChangeEmailScreen(navigator: DestinationsNavigator) {
 @Composable
 fun ChangePasswordScreen(navigator: DestinationsNavigator) {
     val viewModel = SettingsViewModel()
-    var passwordValue by remember {
-        mutableStateOf("")
-    }
+    var passwordValue by remember {mutableStateOf("")}
+    var showErrorAlertDialog by remember {mutableStateOf(false)}
+    var showConfirmationAlertDialog by remember {mutableStateOf(false)}
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(start = 16.dp, end = 16.dp, top = 8.dp)){
@@ -200,10 +257,12 @@ fun ChangePasswordScreen(navigator: DestinationsNavigator) {
                 Spacer(modifier = Modifier.padding(vertical = 12.dp))
                 Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center) {
                     Button(onClick = {
-                                     viewModel.viewModelScope.launch {
-                                         viewModel.changePassword(passwordValue)
-                                         passwordValue = ""
-                                     }
+                                    if (passwordValue.isNotBlank()){
+                                        showConfirmationAlertDialog = true
+                                    }else{
+                                        showErrorAlertDialog = true
+                                    }
+
                     },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
                         Text(text = "Save", fontSize = 24.sp,
@@ -213,5 +272,58 @@ fun ChangePasswordScreen(navigator: DestinationsNavigator) {
                 }
             }
         }
+    }
+    if(showConfirmationAlertDialog){
+        AlertDialog(
+            containerColor = Color(0xFF2E2E2E),
+            onDismissRequest = {
+                showConfirmationAlertDialog = false
+            },
+            title = {
+                Text(text = "Confirmation")
+            },
+            text = {
+                Text(text = "Are you sure you want to change your password?")
+            },
+            confirmButton = {
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
+                    onClick = {
+                        viewModel.viewModelScope.launch {
+
+                            viewModel.changePassword(passwordValue)
+                            passwordValue = ""
+                            navigator.navigate(direction = SettingsViewDestination)}
+                        showConfirmationAlertDialog = false
+                    }
+                ) {
+                    Text(text = "OK")
+                }
+            }
+        )
+    }
+    if(showErrorAlertDialog){
+        AlertDialog(
+            containerColor = Color(0xFF2E2E2E),
+            onDismissRequest = {
+                showErrorAlertDialog = false
+            },
+            title = {
+                Text(text = "Error")
+            },
+            text = {
+                Text(text = "Invalid password format.")
+            },
+            confirmButton = {
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
+                    onClick = {
+                        showErrorAlertDialog = false
+                    }
+                ) {
+                    Text(text = "OK")
+                }
+            }
+        )
     }
 }

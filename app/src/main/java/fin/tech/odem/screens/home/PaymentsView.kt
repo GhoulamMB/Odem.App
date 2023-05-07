@@ -34,7 +34,7 @@ import fin.tech.odem.utils.AppClient
 @Destination
 @Composable
 fun PaymentsView(navigator: DestinationsNavigator) {
-    val transactionsState = rememberUpdatedState(AppClient.client.wallet.transactions)
+    val transactionsState = rememberUpdatedState(AppClient.client.wallet.transactions.sortedBy { t->t.date })
     Box(modifier = Modifier.fillMaxSize().padding(start = 16.dp, end = 16.dp, top = 8.dp)) {
         Column {
             Row {
@@ -90,7 +90,7 @@ fun PaymentsView(navigator: DestinationsNavigator) {
 }
 @Composable
 fun HomePaymentsView() {
-    var transactionState = rememberUpdatedState(AppClient.client.wallet.transactions)
+    val transactionState = rememberUpdatedState(AppClient.client.wallet.transactions)
     Box {
         LazyColumn{
             if(AppClient.client.wallet.transactions.isEmpty()){
