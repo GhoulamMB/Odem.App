@@ -40,10 +40,13 @@ import androidx.lifecycle.viewModelScope
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.R
+import fin.tech.odem.data.models.Client
 import fin.tech.odem.screens.BottomBar
 import fin.tech.odem.screens.destinations.ChangeEmailScreenDestination
 import fin.tech.odem.screens.destinations.ChangePasswordScreenDestination
+import fin.tech.odem.screens.destinations.CreateTicketScreenDestination
 import fin.tech.odem.screens.destinations.HomeViewDestination
+import fin.tech.odem.screens.destinations.LoginViewDestination
 import fin.tech.odem.screens.destinations.SettingsViewDestination
 import fin.tech.odem.utils.AppClient
 import fin.tech.odem.viewModels.SettingsViewModel
@@ -93,8 +96,17 @@ fun SettingsView(navigator: DestinationsNavigator) {
                 }
             }
         }
-        Box(modifier = Modifier.align(alignment = Alignment.BottomEnd)) {
-            BottomBar(navigator)
+        Box (modifier = Modifier
+            .align(alignment = Alignment.BottomCenter)
+            .padding(vertical = 16.dp)){
+            Button(onClick = {
+                navigator.navigate(direction = LoginViewDestination)
+            },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
+                Text(text = "Logout", fontSize = 16.sp,
+                    modifier = Modifier.size(width = 124.dp, height = 24.dp),
+                    textAlign = TextAlign.Center)
+            }
         }
     }
 }
