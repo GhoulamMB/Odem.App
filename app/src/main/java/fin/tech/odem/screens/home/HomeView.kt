@@ -41,7 +41,7 @@ fun HomeView(navigator: DestinationsNavigator) {
             Spacer(modifier = Modifier.padding(vertical = 12.dp))
             Balance()
             Spacer(modifier = Modifier.padding(vertical = 12.dp))
-            HomePaymentsView()
+            HomePaymentsView(navigator)
         }
         Box(modifier = Modifier.align(alignment = Alignment.BottomEnd).padding(top = 12.dp)) {
             BottomBar(navigator, isHomeSelected = true)
