@@ -41,10 +41,13 @@ suspend fun loginWithTokenRequest(token:String):Boolean{
     val gson = GsonBuilder()
         .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
         .create()
-    val body = response.bodyAsText()
-    val clientResponse = gson.fromJson(body, Client::class.java)
-    AppClient.client = clientResponse
-    return clientResponse != null
+    if(response.status.value == 200){
+        val body = response.bodyAsText()
+        val clientResponse = gson.fromJson(body, Client::class.java)
+        AppClient.client = clientResponse
+        return true
+    }
+    return false
 }
 @OptIn(InternalAPI::class)
 suspend fun registerRequest(email:String, password:String, firstName:String, lastName:String, phone:String, street:String, city:String, zip:String):Boolean{
