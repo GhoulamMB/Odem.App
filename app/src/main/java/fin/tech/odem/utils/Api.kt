@@ -26,10 +26,13 @@ suspend fun loginRequest(email:String, password:String):Boolean{
     val gson = GsonBuilder()
         .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
         .create()
+    if(response.status.value != 200){
+        return false
+    }
     val body = response.bodyAsText()
     val clientResponse = gson.fromJson(body, Client::class.java)
     AppClient.client = clientResponse
-    return clientResponse != null
+    return true
 }
 
 suspend fun loginWithTokenRequest(token:String):Boolean{
