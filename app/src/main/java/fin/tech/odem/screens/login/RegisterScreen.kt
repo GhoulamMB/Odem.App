@@ -16,6 +16,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -36,6 +37,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.screens.destinations.LoginViewDestination
 import fin.tech.odem.screens.destinations.PersonalInformationsViewDestination
+import fin.tech.odem.screens.destinations.RegisterViewDestination
 import fin.tech.odem.viewModels.RegisterViewModel
 import kotlinx.coroutines.launch
 
@@ -114,6 +116,10 @@ fun RegisterView(navigator: DestinationsNavigator) {
                 Text(text = "Register", fontSize = 24.sp,
                     modifier = Modifier.size(width = 128.dp, height = 36.dp),
                     textAlign = TextAlign.Center)
+            }
+            Spacer(modifier = Modifier.padding(vertical = 16.dp))
+            TextButton(onClick = { navigator.navigate(direction = LoginViewDestination) }) {
+                Text(text = "Already Registered?", color = Color(0xFF536DFE))
             }
             if(showAlertDialog){
                 AlertDialog(
@@ -238,7 +244,7 @@ fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, pass
                 onValueChange = { zipValue = it },
                 placeholder = { Text("Postal Code") },
                 label = { Text(text = "Postal Code") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
                 shape = customTextFieldShape,
                 colors = TextFieldDefaults.textFieldColors(
