@@ -49,7 +49,8 @@ fun PaymentsView(navigator: DestinationsNavigator) {
                 )
             }
             Spacer(modifier = Modifier.padding(vertical = 18.dp))
-            LazyColumn{
+
+            LazyColumn(modifier = Modifier.height(500.dp)){
                 if (transactionsState.value.isEmpty()) {
                     item {
                         Text(text = "No transactions yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
@@ -83,14 +84,14 @@ fun PaymentsView(navigator: DestinationsNavigator) {
                 }
             }
         }
-        Box(modifier = Modifier.align(alignment = Alignment.BottomEnd)) {
+        Box(modifier = Modifier.align(alignment = Alignment.BottomCenter)) {
             BottomBar(navigator, isPaymentSelected = true)
         }
     }
 }
 @Composable
 fun HomePaymentsView() {
-    val transactionState = rememberUpdatedState(AppClient.client.wallet.transactions)
+    val transactionState = rememberUpdatedState(AppClient.client.wallet.transactions.sortedBy { t->t.date })
     Box {
         LazyColumn{
             if(AppClient.client.wallet.transactions.isEmpty()){
