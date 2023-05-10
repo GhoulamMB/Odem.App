@@ -64,25 +64,31 @@ fun SupportView(navigator: DestinationsNavigator) {
             }
             Spacer(modifier = Modifier.padding(vertical = 18.dp))
             LazyColumn{
-                items(tickets.size){
-                        i->
-                    run {
-                        Row(
-                            modifier = Modifier
-                                .height(40.dp)
-                                .fillMaxWidth()
-                                .background(Color(0xFF303030), RoundedCornerShape(8.dp))
-                                .padding(start = 8.dp, end = 8.dp)
-                        ){
-                            TextButton(
-                                onClick = {
-                                    navigator.navigate(direction = TicketInformationsScreenDestination(tickedId = tickets[i].id))
+                if (tickets.isEmpty()) {
+                    item {
+                        Text(text = "No tickets yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                    }
+                }else{
+                    items(tickets.size){
+                            i->
+                        run {
+                            Row(
+                                modifier = Modifier
+                                    .height(40.dp)
+                                    .fillMaxWidth()
+                                    .background(Color(0xFF303030), RoundedCornerShape(8.dp))
+                                    .padding(start = 8.dp, end = 8.dp)
+                            ){
+                                TextButton(
+                                    onClick = {
+                                        navigator.navigate(direction = TicketInformationsScreenDestination(tickedId = tickets[i].id))
                                     },
-                                colors = textButtonColors(contentColor = Color(0xFF536DFE))) {
-                                Text(text = "Ticket ${i+1}")
+                                    colors = textButtonColors(contentColor = Color(0xFF536DFE))) {
+                                    Text(text = "Ticket ${i+1}")
+                                }
                             }
+                            Spacer(modifier = Modifier.padding(vertical = 12.dp))
                         }
-                        Spacer(modifier = Modifier.padding(vertical = 12.dp))
                     }
                 }
             }
