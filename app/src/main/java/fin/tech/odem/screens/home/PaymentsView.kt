@@ -19,14 +19,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ramcosta.composedestinations.annotation.Destination
@@ -42,7 +43,10 @@ import fin.tech.odem.utils.AppClient
 @Destination
 @Composable
 fun PaymentsView(navigator: DestinationsNavigator) {
-    val transactionsState = rememberUpdatedState(AppClient.client.wallet.transactions.sortedBy { t->t.date })
+    val transactionsState by remember {
+        mutableStateOf(AppClient.client.wallet.transactions.sortedBy { t->t.date })
+    }
+    val clientName = "${AppClient.client.firstName} ${AppClient.client.lastName}"
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(start = 16.dp, end = 16.dp, top = 8.dp)) {
@@ -61,64 +65,46 @@ fun PaymentsView(navigator: DestinationsNavigator) {
             Spacer(modifier = Modifier.padding(vertical = 18.dp))
 
             LazyColumn(modifier = Modifier.height(500.dp)){
-                if (transactionsState.value.isEmpty()) {
+                if (transactionsState.isEmpty()) {
                     item {
                         Text(text = "No transactions yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     }
                 }else{
-                    items(transactionsState.value.size){
+                    items(transactionsState.size){
                             i->
                         run {
-                            Button(onClick = { /*TODO*/ },modifier = Modifier
+                            Button(onClick = { navigator.navigate(direction = TransactionDetailsDestination(transactionsState[i])) },modifier = Modifier
                                 .height(50.dp)
                                 .fillMaxWidth()
                                 .padding(start = 8.dp, end = 8.dp),
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF303030))
                             ) {
-                                if (AppClient.client.wallet.transactions[i].fromName == null) {
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .align(Alignment.CenterVertically)
-                                    ) {
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .align(Alignment.CenterVertically)
+                                ) {
+                                    Text(
+                                        text = transactionsState[i].partyTwo,
+                                        color = Color.White,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .fillMaxSize(),
+                                    contentAlignment = Alignment.CenterEnd
+                                ) {
+                                    if(transactionsState[i].partyTwo != clientName){
                                         Text(
-                                            text = "${AppClient.client.wallet.transactions[i].toName}",
-                                            color = Color.White,
-                                            textAlign = TextAlign.Center
-                                        )
-                                    }
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .fillMaxSize(),
-                                        contentAlignment = Alignment.CenterEnd
-                                    ) {
-                                        Text(
-                                            text = "+${AppClient.client.wallet.transactions[i].amount} DZD",
-                                            color = Color(0xFF4CAF50)
-                                        )
-                                    }
-                                } else {
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .align(alignment = Alignment.CenterVertically)
-                                    ) {
-                                        Text(
-                                            text = "${AppClient.client.wallet.transactions[i].fromName}",
-                                            color = Color.White,
-                                            textAlign = TextAlign.Center
-                                        )
-                                    }
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .fillMaxSize(),
-                                        contentAlignment = Alignment.CenterEnd
-                                    ) {
-                                        Text(
-                                            text = "-${AppClient.client.wallet.transactions[i].amount} DZD",
+                                            text = "-${transactionsState[i].amount} DZD",
                                             color = Color(0xFFF44336)
+                                        )
+                                    }else{
+                                        Text(
+                                            text = "+${transactionsState[i].amount} DZD",
+                                            color = Color(0xFF4CAF50)
                                         )
                                     }
                                 }
@@ -136,7 +122,10 @@ fun PaymentsView(navigator: DestinationsNavigator) {
 }
 @Composable
 fun HomePaymentsView(navigator: DestinationsNavigator) {
-    val transactionState = rememberUpdatedState(AppClient.client.wallet.transactions.sortedBy { t->t.date.time })
+    val transactionState  by remember {
+        mutableStateOf(AppClient.client.wallet.transactions.sortedBy { t->t.date })
+    }
+    val clientName = "${AppClient.client.firstName} ${AppClient.client.lastName}"
     Box {
         LazyColumn{
             if(AppClient.client.wallet.transactions.isEmpty()){
@@ -144,61 +133,53 @@ fun HomePaymentsView(navigator: DestinationsNavigator) {
                     Text(text = "No transactions yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 }
             }else{
-                items(transactionState.value.take(5).size){
+                items(transactionState.take(5).size){
                         i->
                     run {
-                        Button(onClick = { navigator.navigate(direction = TransactionDetailsDestination(transactionState.value[i])) },modifier = Modifier
-                            .height(50.dp)
-                            .fillMaxWidth()
-                            .padding(start = 8.dp, end = 8.dp),
+                        Button(onClick = { navigator.navigate(direction = TransactionDetailsDestination(transactionState[i])) },
+                            modifier = Modifier
+                                .height(50.dp)
+                                .fillMaxWidth()
+                                .padding(start = 8.dp, end = 8.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF303030))
                         ) {
-                            if (AppClient.client.wallet.transactions[i].fromName == null) {
-                                Box(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .align(Alignment.CenterVertically)
-                                ) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .align(Alignment.CenterVertically)
+                            ) {
+                                if(transactionState[i].partyOne != clientName){
                                     Text(
-                                        text = "${AppClient.client.wallet.transactions[i].toName}",
+                                        text = AppClient.client.wallet.transactions[i].partyOne,
+                                        color = Color.White,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }else{
+                                    Text(
+                                        text = AppClient.client.wallet.transactions[i].partyTwo,
                                         color = Color.White,
                                         textAlign = TextAlign.Center
                                     )
                                 }
-                                Box(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .fillMaxSize(),
-                                    contentAlignment = Alignment.CenterEnd
-                                ) {
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.CenterEnd
+                            ) {
+                                if (transactionState[i].partyOne != clientName) {
                                     Text(
                                         text = "+${AppClient.client.wallet.transactions[i].amount} DZD",
                                         color = Color(0xFF4CAF50)
                                     )
-                                }
-                            } else {
-                                Box(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .align(alignment = Alignment.CenterVertically)
-                                ) {
-                                    Text(
-                                        text = "${AppClient.client.wallet.transactions[i].fromName}",
-                                        color = Color.White,
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
-                                Box(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .fillMaxSize(),
-                                    contentAlignment = Alignment.CenterEnd
-                                ) {
+                                }else{
                                     Text(
                                         text = "-${AppClient.client.wallet.transactions[i].amount} DZD",
                                         color = Color(0xFFF44336)
                                     )
                                 }
+
                             }
                         }
                         Spacer(modifier = Modifier.padding(vertical = 6.dp))
@@ -212,6 +193,7 @@ fun HomePaymentsView(navigator: DestinationsNavigator) {
 @Composable
 @Destination
 fun TransactionDetails(navigator: DestinationsNavigator,transaction:OdemTransfer) {
+    val clientName = "${AppClient.client.firstName} ${AppClient.client.lastName}"
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(start = 16.dp, end = 16.dp, top = 8.dp)){
@@ -226,10 +208,10 @@ fun TransactionDetails(navigator: DestinationsNavigator,transaction:OdemTransfer
             Column(modifier = Modifier
                 .fillMaxWidth()
                 .background(Color(0xFF303030), RoundedCornerShape(16.dp))) {
-                if(transaction.type == 0){
-                    Text(text = "+${transaction.amount} DZD",
+                if(transaction.partyTwo != clientName){
+                    Text(text = "-${transaction.amount} DZD",
                         modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
-                        color = Color.White,
+                        color = Color(0xFFF44336),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold)
                     Text(text = "Transaction details",
@@ -237,17 +219,17 @@ fun TransactionDetails(navigator: DestinationsNavigator,transaction:OdemTransfer
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(start = 8.dp, top = 18.dp))
-                    Text(text = "When : ${transaction.date.time}",
+                    Text(text = "When : ${transaction.date}",
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(start = 8.dp, top = 18.dp))
-                    Text(text = "From  : ${transaction.fromName}",
+                    Text(text = "From  : ${transaction.partyOne}",
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(start = 8.dp, top = 18.dp))
-                    Text(text = "To       : ${AppClient.client.email}",
+                    Text(text = "To       : ${transaction.partyTwo}",
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -255,9 +237,9 @@ fun TransactionDetails(navigator: DestinationsNavigator,transaction:OdemTransfer
                     Spacer(modifier = Modifier.padding(vertical = 18.dp))
                 }
                 else{
-                    Text(text = "-${transaction.amount} DZD",
+                    Text(text = "+${transaction.amount} DZD",
                         modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
-                        color = Color.White,
+                        color = Color(0xFF4CAF50),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold)
                     Text(text = "Transaction details",
@@ -265,17 +247,17 @@ fun TransactionDetails(navigator: DestinationsNavigator,transaction:OdemTransfer
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(start = 8.dp, top = 18.dp))
-                    Text(text = "When : ${transaction.date.time}",
+                    Text(text = "When : ${transaction.date}",
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(start = 8.dp, top = 18.dp))
-                    Text(text = "From  : ${AppClient.client.email}",
+                    Text(text = "From  : ${transaction.partyOne}",
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(start = 8.dp, top = 18.dp))
-                    Text(text = "To       : ${transaction.fromName}",
+                    Text(text = "To       : ${transaction.partyTwo}",
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,

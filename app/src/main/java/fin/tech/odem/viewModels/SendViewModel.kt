@@ -13,10 +13,6 @@ class SendViewModel : ViewModel() {
         }catch (e:Exception){
             false
         }
-        if(result){
-            AppClient.client.wallet.transactions = fetchTransactions(AppClient.client.uid).toTypedArray()
-            AppClient.client.wallet.balance -= amount
-        }
         return result
     }
 }

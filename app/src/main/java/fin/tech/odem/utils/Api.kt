@@ -93,7 +93,11 @@ suspend fun transactionRequest(amount:Double, toEmail:String):Boolean{
         headers.append("Content-Type", "application/json")
         headers.append("Accept", "accept: */*")
     }
-    return response.status.value == 200
+    if(response.status.value == 200){
+        loginWithTokenRequest(AppClient.client.token)
+        return true
+    }
+    return false
 }
 
 suspend fun fetchTransactions(userId: String):List<OdemTransfer>{

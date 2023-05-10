@@ -58,6 +58,7 @@ fun RequestView(navigator: DestinationsNavigator) {
     var amountValue by remember { mutableStateOf("") } //Parse to double to use it
     var receiverValue by remember { mutableStateOf("") }
     var reasonValue by remember { mutableStateOf("") }
+    var requests by remember { mutableStateOf(AppClient.client.recievedRequests)}
 
     Box (modifier = Modifier
         .fillMaxSize()
@@ -141,31 +142,32 @@ fun RequestView(navigator: DestinationsNavigator) {
             }
             Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
             Text(text = "Recieved Requests", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(vertical = 8.dp))
-            if(AppClient.client.recievedRequests != null){
-                val recievedRequests by remember {
-                    mutableStateOf(AppClient.client.recievedRequests)
-                }
+            if(requests != null){
                 LazyColumn{
-                    if(recievedRequests.isEmpty()){
+                    if(requests.isEmpty()){
                         item {
                             Text(text = "No requests yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                         }
                     }else{
-                        items(recievedRequests.size){
+                        items(requests.size){
                                 i->
                             run {
-                                if(!recievedRequests[i].checked){
-                                    Button(onClick = { navigator.navigate(direction = TransferRequestViewDestination(recievedRequests[i])) },
-                                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                                        shape = RoundedCornerShape(4.dp)) {
+                                if(!requests[i].checked){
+                                    Button(onClick = { navigator.navigate(direction = TransferRequestViewDestination(requests[i])) },
+                                        modifier = Modifier
+                                            .height(50.dp)
+                                            .fillMaxWidth()
+                                            .padding(start = 8.dp, end = 8.dp),
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF303030))
+                                        ) {
                                         Row(modifier = Modifier
                                             .height(40.dp)
                                             .fillMaxWidth()
                                             .background(Color(0xFF303030), RoundedCornerShape(8.dp))
                                             .padding(start = 8.dp, end = 8.dp)) {
                                             Column {
-                                                Text(text = recievedRequests[i].from)
-                                                Text(text = "${recievedRequests[i].amount} DZD")
+                                                Text(text = requests[i].from)
+                                                Text(text = "${requests[i].amount} DZD")
                                             }
                                         }
                                     }
@@ -208,10 +210,13 @@ fun TransferRequestView(navigator: DestinationsNavigator,transferRequest: Transf
                 Row(modifier = Modifier.padding(vertical = 16.dp)) {
                     Text(text = "Reason:     ${transferRequest.reason}", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 }
-                Row(modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp),horizontalArrangement = Arrangement.SpaceEvenly) {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 32.dp),horizontalArrangement = Arrangement.SpaceEvenly) {
                     Button(onClick = {
                                      viewModel.viewModelScope.launch {
-                                         viewModel.acceptRequest(transferRequest.id)
+                                         viewModel.acceptRequest(transferRequest.id,transferRequest.amount)
+                                         AppClient.client.recievedRequests.last { t->t.id == transferRequest.id }.checked = true
                                          navigator.navigate(direction = RequestViewDestination)
                                      }
                     },

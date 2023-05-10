@@ -12,7 +12,7 @@ data class TransferRequest(val id:String,
                            val amount:Double,
                            val from:String,
                            val to:String,
-                           val checked:Boolean,
+                           var checked:Boolean,
                            val reason:String,
                            @Contextual
                            val timeStamp:Date) : Parcelable

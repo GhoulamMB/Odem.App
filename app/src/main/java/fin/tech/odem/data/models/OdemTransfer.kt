@@ -11,7 +11,6 @@ import java.util.Date
 class OdemTransfer(val amount:Double,
                    @Contextual
                    val date: Date,
-                   val type:Int,
-                   val fromName:String?,
-                   val toName:String?
+                   val partyOne:String,
+                   val partyTwo:String
 ) : Parcelable
