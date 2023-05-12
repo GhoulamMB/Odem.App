@@ -1,5 +1,6 @@
 package fin.tech.odem
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,8 +16,12 @@ import fin.tech.odem.screens.NavGraphs
 import fin.tech.odem.ui.theme.OdemTheme
 
 class MainActivity : ComponentActivity() {
+    companion object {
+        lateinit var appContext: Context
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appContext = applicationContext
         setContent {
             OdemTheme {
                 Box(

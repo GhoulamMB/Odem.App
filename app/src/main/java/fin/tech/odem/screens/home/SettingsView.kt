@@ -36,7 +36,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.R
@@ -55,6 +57,7 @@ import kotlinx.coroutines.launch
 @Destination
 @Composable
 fun SettingsView(navigator: DestinationsNavigator) {
+    val viewModel = viewModel<SettingsViewModel>()
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(start = 16.dp, end = 16.dp, top = 8.dp)){
@@ -100,6 +103,7 @@ fun SettingsView(navigator: DestinationsNavigator) {
             .align(alignment = Alignment.BottomCenter)
             .padding(vertical = 16.dp)){
             Button(onClick = {
+                viewModel.logout()
                 navigator.navigate(direction = LoginViewDestination)
             },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
@@ -115,7 +119,7 @@ fun SettingsView(navigator: DestinationsNavigator) {
 @Destination
 @Composable
 fun ChangeEmailScreen(navigator: DestinationsNavigator) {
-    val viewModel = SettingsViewModel()
+    val viewModel = viewModel<SettingsViewModel>()
     var emailValue by remember {
         mutableStateOf(AppClient.client.email)
     }
@@ -229,7 +233,7 @@ fun ChangeEmailScreen(navigator: DestinationsNavigator) {
 @Destination
 @Composable
 fun ChangePasswordScreen(navigator: DestinationsNavigator) {
-    val viewModel = SettingsViewModel()
+    val viewModel = viewModel<SettingsViewModel>()
     var passwordValue by remember {mutableStateOf("")}
     var showErrorAlertDialog by remember {mutableStateOf(false)}
     var showConfirmationAlertDialog by remember {mutableStateOf(false)}

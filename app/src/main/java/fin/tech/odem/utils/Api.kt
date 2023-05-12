@@ -2,8 +2,10 @@
 
 package fin.tech.odem.utils
 
+import android.content.Context
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import fin.tech.odem.MainActivity
 import fin.tech.odem.data.models.Client
 import fin.tech.odem.data.models.Message
 import fin.tech.odem.data.models.OdemTransfer
@@ -16,6 +18,7 @@ import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
 import io.ktor.util.InternalAPI
 import java.util.Date
+
 
 const val BASE_URL = "http://85.215.99.211:5000/api"
 
@@ -30,11 +33,33 @@ suspend fun loginRequest(email:String, password:String):Boolean{
         val body = response.bodyAsText()
         val clientResponse = gson.fromJson(body, Client::class.java)
         AppClient.client = clientResponse
+        saveToken(AppClient.client.token)
         return true
     }
     return false
 }
 
+fun saveToken(token: String) {
+    MainActivity
+        .appContext
+        .getSharedPreferences("token", Context.MODE_PRIVATE)
+        .edit()
+        .putString("token", token)
+        .apply()
+}
+
+fun retrieveToken():String?{
+    return MainActivity
+        .appContext
+        .getSharedPreferences("token", Context.MODE_PRIVATE)
+        .getString("token", null)
+}
+fun clearToken() {
+    MainActivity.appContext.getSharedPreferences("token", Context.MODE_PRIVATE)
+        .edit()
+        .clear()
+        .apply()
+}
 suspend fun loginWithTokenRequest(token:String):Boolean{
     val client = HttpClient()
     val response = client.get("$BASE_URL/Login/loginwithtoken?token=$token")

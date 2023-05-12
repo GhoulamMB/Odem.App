@@ -1,5 +1,6 @@
 package fin.tech.odem.screens.login
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,6 +39,7 @@ import fin.tech.odem.screens.destinations.RegisterViewDestination
 import fin.tech.odem.viewModels.LoginViewModel
 import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Destination
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
