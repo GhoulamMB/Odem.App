@@ -14,7 +14,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -37,12 +36,10 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.screens.destinations.LoginViewDestination
 import fin.tech.odem.screens.destinations.PersonalInformationsViewDestination
-import fin.tech.odem.screens.destinations.RegisterViewDestination
 import fin.tech.odem.viewModels.RegisterViewModel
 import kotlinx.coroutines.launch
 
 @Destination
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterView(navigator: DestinationsNavigator) {
     var showAlertDialog by remember {mutableStateOf(false)}
@@ -70,12 +67,15 @@ fun RegisterView(navigator: DestinationsNavigator) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
                 shape = customTextFieldShape,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedLabelColor = Color(0xFF536DFE),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    cursorColor = Color(0xFF536DFE),
                     focusedIndicatorColor = Color(0xFF536DFE),
-                    cursorColor = Color(0xFF536DFE)
-                ))
+                    focusedLabelColor = Color(0xFF536DFE),
+                )
+            )
 
             Spacer(modifier = Modifier.padding(vertical = 24.dp))
             TextField(
@@ -86,11 +86,13 @@ fun RegisterView(navigator: DestinationsNavigator) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth(),
                 shape = customTextFieldShape,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedLabelColor = Color(0xFF536DFE),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    cursorColor = Color(0xFF536DFE),
                     focusedIndicatorColor = Color(0xFF536DFE),
-                    cursorColor = Color(0xFF536DFE)
+                    focusedLabelColor = Color(0xFF536DFE),
                 ),
                 visualTransformation = PasswordVisualTransformation(),
             )
@@ -150,7 +152,6 @@ fun RegisterView(navigator: DestinationsNavigator) {
 }
 
 @Destination
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, password:String){
     val registerViewModel = RegisterViewModel()
@@ -179,11 +180,13 @@ fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, pass
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 modifier = Modifier.fillMaxWidth(),
                 shape = customTextFieldShape,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedLabelColor = Color(0xFF536DFE),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    cursorColor = Color(0xFF536DFE),
                     focusedIndicatorColor = Color(0xFF536DFE),
-                    cursorColor = Color(0xFF536DFE)
+                    focusedLabelColor = Color(0xFF536DFE),
                 ),
 
                 )
@@ -196,11 +199,13 @@ fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, pass
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 modifier = Modifier.fillMaxWidth(),
                 shape = customTextFieldShape,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedLabelColor = Color(0xFF536DFE),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    cursorColor = Color(0xFF536DFE),
                     focusedIndicatorColor = Color(0xFF536DFE),
-                    cursorColor = Color(0xFF536DFE)
+                    focusedLabelColor = Color(0xFF536DFE),
                 ),
 
                 )
@@ -213,11 +218,13 @@ fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, pass
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 modifier = Modifier.fillMaxWidth(),
                 shape = customTextFieldShape,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedLabelColor = Color(0xFF536DFE),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    cursorColor = Color(0xFF536DFE),
                     focusedIndicatorColor = Color(0xFF536DFE),
-                    cursorColor = Color(0xFF536DFE)
+                    focusedLabelColor = Color(0xFF536DFE),
                 ),
 
                 )
@@ -230,11 +237,13 @@ fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, pass
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 modifier = Modifier.fillMaxWidth(),
                 shape = customTextFieldShape,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedLabelColor = Color(0xFF536DFE),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    cursorColor = Color(0xFF536DFE),
                     focusedIndicatorColor = Color(0xFF536DFE),
-                    cursorColor = Color(0xFF536DFE)
+                    focusedLabelColor = Color(0xFF536DFE),
                 ),
 
                 )
@@ -247,11 +256,13 @@ fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, pass
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
                 shape = customTextFieldShape,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedLabelColor = Color(0xFF536DFE),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    cursorColor = Color(0xFF536DFE),
                     focusedIndicatorColor = Color(0xFF536DFE),
-                    cursorColor = Color(0xFF536DFE)
+                    focusedLabelColor = Color(0xFF536DFE),
                 ),
                 )
             Spacer(modifier = Modifier.padding(vertical = 18.dp))
@@ -263,11 +274,13 @@ fun PersonalInformationsView(navigator: DestinationsNavigator,email:String, pass
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 modifier = Modifier.fillMaxWidth(),
                 shape = customTextFieldShape,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedLabelColor = Color(0xFF536DFE),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    cursorColor = Color(0xFF536DFE),
                     focusedIndicatorColor = Color(0xFF536DFE),
-                    cursorColor = Color(0xFF536DFE)
+                    focusedLabelColor = Color(0xFF536DFE),
                 )
                 )
             Spacer(modifier = Modifier.padding(vertical = 12.dp))

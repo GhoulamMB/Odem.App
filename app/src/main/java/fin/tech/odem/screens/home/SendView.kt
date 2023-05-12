@@ -76,11 +76,13 @@ fun SendView(navigator: DestinationsNavigator) {
                         label = { Text(text = "Amount")},
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedLabelColor = Color(0xFF536DFE),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            cursorColor = Color(0xFF536DFE),
                             focusedIndicatorColor = Color(0xFF536DFE),
-                            cursorColor = Color(0xFF536DFE)
+                            focusedLabelColor = Color(0xFF536DFE),
                         )
                     )
                     Spacer(modifier = Modifier.padding(vertical = 24.dp))
@@ -91,11 +93,13 @@ fun SendView(navigator: DestinationsNavigator) {
                         label = { Text(text = "For Who?")},
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedLabelColor = Color(0xFF536DFE),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            cursorColor = Color(0xFF536DFE),
                             focusedIndicatorColor = Color(0xFF536DFE),
-                            cursorColor = Color(0xFF536DFE)
+                            focusedLabelColor = Color(0xFF536DFE),
                         )
                     )
                     Spacer(modifier = Modifier.padding(vertical = 20.dp))

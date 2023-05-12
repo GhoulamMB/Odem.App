@@ -36,9 +36,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
-import fin.tech.odem.R
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import fin.tech.odem.R
 import fin.tech.odem.screens.destinations.SupportViewDestination
 import fin.tech.odem.utils.AppClient
 import fin.tech.odem.viewModels.TicketInformationsViewModel
@@ -102,11 +102,13 @@ fun TicketInformationsScreen(navigator: DestinationsNavigator,tickedId: String) 
                     modifier=Modifier.height(46.dp),
                     value = messageValue,
                     onValueChange = {messageValue = it},
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent,
-                        focusedLabelColor = Color(0xFF2E2E2E),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        cursorColor = Color(0xFF2E2E2E),
                         focusedIndicatorColor = Color(0xFF2E2E2E),
-                        cursorColor = Color(0xFF2E2E2E)
+                        focusedLabelColor = Color(0xFF2E2E2E),
                     ),
                     shape = RoundedCornerShape(4.dp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)

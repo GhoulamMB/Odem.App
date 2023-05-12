@@ -16,7 +16,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -36,17 +35,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.R
-import fin.tech.odem.data.models.Client
-import fin.tech.odem.screens.BottomBar
 import fin.tech.odem.screens.destinations.ChangeEmailScreenDestination
 import fin.tech.odem.screens.destinations.ChangePasswordScreenDestination
-import fin.tech.odem.screens.destinations.CreateTicketScreenDestination
 import fin.tech.odem.screens.destinations.HomeViewDestination
 import fin.tech.odem.screens.destinations.LoginViewDestination
 import fin.tech.odem.screens.destinations.SettingsViewDestination
@@ -115,7 +110,6 @@ fun SettingsView(navigator: DestinationsNavigator) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
 fun ChangeEmailScreen(navigator: DestinationsNavigator) {
@@ -150,11 +144,13 @@ fun ChangeEmailScreen(navigator: DestinationsNavigator) {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent,
-                        focusedLabelColor = Color(0xFF536DFE),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        cursorColor = Color(0xFF536DFE),
                         focusedIndicatorColor = Color(0xFF536DFE),
-                        cursorColor = Color(0xFF536DFE)
+                        focusedLabelColor = Color(0xFF536DFE),
                     )
                 )
                 Spacer(modifier = Modifier.padding(vertical = 12.dp))
@@ -229,7 +225,6 @@ fun ChangeEmailScreen(navigator: DestinationsNavigator) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
 fun ChangePasswordScreen(navigator: DestinationsNavigator) {
@@ -262,11 +257,13 @@ fun ChangePasswordScreen(navigator: DestinationsNavigator) {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent,
-                        focusedLabelColor = Color(0xFF536DFE),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        cursorColor = Color(0xFF536DFE),
                         focusedIndicatorColor = Color(0xFF536DFE),
-                        cursorColor = Color(0xFF536DFE)
+                        focusedLabelColor = Color(0xFF536DFE),
                     ),
                     visualTransformation = PasswordVisualTransformation()
                 )

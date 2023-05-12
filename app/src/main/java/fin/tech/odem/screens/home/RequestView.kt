@@ -58,7 +58,7 @@ fun RequestView(navigator: DestinationsNavigator) {
     var amountValue by remember { mutableStateOf("") } //Parse to double to use it
     var receiverValue by remember { mutableStateOf("") }
     var reasonValue by remember { mutableStateOf("") }
-    var requests by remember { mutableStateOf(AppClient.client.recievedRequests)}
+    val requests by remember { mutableStateOf(AppClient.client.recievedRequests)}
 
     Box (modifier = Modifier
         .fillMaxSize()
@@ -86,11 +86,13 @@ fun RequestView(navigator: DestinationsNavigator) {
                         label = { Text(text = "Amount") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedLabelColor = Color(0xFF536DFE),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            cursorColor = Color(0xFF536DFE),
                             focusedIndicatorColor = Color(0xFF536DFE),
-                            cursorColor = Color(0xFF536DFE)
+                            focusedLabelColor = Color(0xFF536DFE),
                         )
                     )
                     Spacer(modifier = Modifier.padding(vertical = 24.dp))
@@ -101,11 +103,13 @@ fun RequestView(navigator: DestinationsNavigator) {
                         label = { Text(text = "For Who?") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedLabelColor = Color(0xFF536DFE),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            cursorColor = Color(0xFF536DFE),
                             focusedIndicatorColor = Color(0xFF536DFE),
-                            cursorColor = Color(0xFF536DFE)
+                            focusedLabelColor = Color(0xFF536DFE),
                         )
                     )
                     Spacer(modifier = Modifier.padding(vertical = 24.dp))
@@ -116,11 +120,13 @@ fun RequestView(navigator: DestinationsNavigator) {
                         label = { Text(text = "Reason") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                         modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedLabelColor = Color(0xFF536DFE),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            cursorColor = Color(0xFF536DFE),
                             focusedIndicatorColor = Color(0xFF536DFE),
-                            cursorColor = Color(0xFF536DFE)
+                            focusedLabelColor = Color(0xFF536DFE),
                         )
                     )
                     Spacer(modifier = Modifier.padding(vertical = 20.dp))

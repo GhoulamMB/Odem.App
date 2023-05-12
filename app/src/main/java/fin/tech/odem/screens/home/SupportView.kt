@@ -31,8 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.navOptions
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.R
@@ -40,7 +38,6 @@ import fin.tech.odem.screens.destinations.CreateTicketScreenDestination
 import fin.tech.odem.screens.destinations.HomeViewDestination
 import fin.tech.odem.screens.destinations.TicketInformationsScreenDestination
 import fin.tech.odem.utils.AppClient
-import fin.tech.odem.viewModels.TicketInformationsViewModel
 
 @Destination
 @Composable

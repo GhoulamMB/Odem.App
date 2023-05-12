@@ -29,14 +29,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.R
-import fin.tech.odem.screens.destinations.HomeViewDestination
 import fin.tech.odem.screens.destinations.SupportViewDestination
 import fin.tech.odem.screens.destinations.TicketInformationsScreenDestination
 import fin.tech.odem.viewModels.CreateTicketViewModel
@@ -74,11 +72,13 @@ fun CreateTicketScreen(navigator: DestinationsNavigator) {
                         label = { Text(text = "Message") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedLabelColor = Color(0xFF536DFE),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            cursorColor = Color(0xFF536DFE),
                             focusedIndicatorColor = Color(0xFF536DFE),
-                            cursorColor = Color(0xFF536DFE)
+                            focusedLabelColor = Color(0xFF536DFE),
                         )
                     )
                     Spacer(modifier = Modifier.padding(vertical = 20.dp))
