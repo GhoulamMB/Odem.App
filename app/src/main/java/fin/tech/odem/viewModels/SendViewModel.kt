@@ -1,8 +1,6 @@
 package fin.tech.odem.viewModels
 
 import androidx.lifecycle.ViewModel
-import fin.tech.odem.utils.AppClient
-import fin.tech.odem.utils.fetchTransactions
 import fin.tech.odem.utils.transactionRequest
 import java.lang.Exception
 

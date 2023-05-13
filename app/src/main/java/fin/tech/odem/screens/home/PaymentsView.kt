@@ -20,8 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,13 +37,13 @@ import fin.tech.odem.screens.destinations.HomeViewDestination
 import fin.tech.odem.screens.destinations.SupportViewDestination
 import fin.tech.odem.screens.destinations.TransactionDetailsDestination
 import fin.tech.odem.utils.AppClient
+import fin.tech.odem.viewModels.PaymentsViewModel
 
 @Destination
 @Composable
 fun PaymentsView(navigator: DestinationsNavigator) {
-    val transactionsState by remember {
-        mutableStateOf(AppClient.client.wallet.transactions.sortedByDescending { t->t.date })
-    }
+    val viewModel = PaymentsViewModel()
+    val transactionsState by viewModel.Transactions
     val clientName = "${AppClient.client.firstName} ${AppClient.client.lastName}"
     Box(modifier = Modifier
         .fillMaxSize()
@@ -122,9 +120,8 @@ fun PaymentsView(navigator: DestinationsNavigator) {
 }
 @Composable
 fun HomePaymentsView(navigator: DestinationsNavigator) {
-    val transactionState  by remember {
-        mutableStateOf(AppClient.client.wallet.transactions.sortedByDescending { t->t.date })
-    }
+    val viewModel = PaymentsViewModel()
+    val transactionState by viewModel.Transactions
     val clientName = "${AppClient.client.firstName} ${AppClient.client.lastName}"
     Box {
         LazyColumn{

@@ -5,7 +5,7 @@ import fin.tech.odem.utils.AppClient
 import fin.tech.odem.utils.acceptTransferRequest
 import fin.tech.odem.utils.createTransferRequest
 import fin.tech.odem.utils.declineTransferRequest
-import fin.tech.odem.utils.fetchTransactions
+import fin.tech.odem.utils.fetchTransactionsRequest
 
 class TransferRequestViewModel : ViewModel() {
 
@@ -14,7 +14,7 @@ class TransferRequestViewModel : ViewModel() {
     }
     suspend fun acceptRequest(requestId: String,amount:Double) {
         acceptTransferRequest(requestId)
-        AppClient.client.wallet.transactions = fetchTransactions(AppClient.client.uid).toTypedArray()
+        AppClient.client.wallet.transactions = fetchTransactionsRequest(AppClient.client.uid).toTypedArray()
         AppClient.client.wallet.balance -= amount
     }
 

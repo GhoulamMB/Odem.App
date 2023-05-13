@@ -127,7 +127,7 @@ suspend fun transactionRequest(amount:Double, toEmail:String):Boolean{
     return false
 }
 
-suspend fun fetchTransactions(userId: String):List<OdemTransfer>{
+suspend fun fetchTransactionsRequest(userId: String):List<OdemTransfer>{
     val url = "$BASE_URL/Transactions?userId=$userId"
     val client = HttpClient()
     val response = client.get(url)
