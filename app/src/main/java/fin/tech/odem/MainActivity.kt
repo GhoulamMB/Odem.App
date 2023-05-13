@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import com.onesignal.OneSignal
 import com.ramcosta.composedestinations.DestinationsNavHost
 import fin.tech.odem.screens.NavGraphs
 import fin.tech.odem.ui.theme.OdemTheme
 import fin.tech.odem.viewModels.LoginViewModel
+import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
 
@@ -29,14 +31,20 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = LoginViewModel()
-        isAuthenticated = viewModel.AuthenticationState.value
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
         // OneSignal Initialization
         OneSignal.initWithContext(this)
         OneSignal.setAppId(ONESIGNAL_APP_ID)
         playerId = OneSignal.getDeviceState()?.userId.toString()
         appContext = applicationContext
+        val viewModel = LoginViewModel()
+        isAuthenticated = viewModel.AuthenticationState.value
+        if(isAuthenticated){
+            viewModel.viewModelScope.launch {
+                viewModel.loginWithToken()
+                isAuthenticated = true
+            }
+        }
         setContent {
             OdemTheme {
                 Box(

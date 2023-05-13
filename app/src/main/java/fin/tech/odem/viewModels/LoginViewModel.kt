@@ -16,15 +16,11 @@ class LoginViewModel : ViewModel(){
     }
     private fun validateTokenAndSetState() {
         val token = getToken() // Retrieve token from your storage mechanism
-
-        viewModelScope.launch {
-            if (token != null) {
-                val isValidToken = loginWithToken(token)
-                AuthenticationState.value = isValidToken
-            } else {
-                deleteToken()
-                AuthenticationState.value = false
-            }
+        if (token != null) {
+            AuthenticationState.value = true
+        } else {
+            deleteToken()
+            AuthenticationState.value = false
         }
     }
     suspend fun login(email:String, password:String):Boolean{
@@ -39,7 +35,7 @@ class LoginViewModel : ViewModel(){
         clearToken()
     }
 
-    private suspend fun loginWithToken(token: String): Boolean {
-        return loginWithTokenRequest(token)
+    suspend fun loginWithToken(): Boolean? {
+        return getToken()?.let { loginWithTokenRequest(it) }
     }
 }
