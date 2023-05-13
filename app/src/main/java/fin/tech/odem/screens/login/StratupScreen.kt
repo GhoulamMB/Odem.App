@@ -35,13 +35,13 @@ import fin.tech.odem.screens.destinations.RegisterViewDestination
 @Composable
 fun Startup (navigator:DestinationsNavigator){
     val authState = MainActivity.isAuthenticated
-    LaunchedEffect(authState) {
-        if (authState) {
+    LaunchedEffect(!authState) {
+        if (!authState) {
             navigator.navigate(HomeViewDestination)
         }
     }
 
-    if (!authState) {
+    if (authState) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
