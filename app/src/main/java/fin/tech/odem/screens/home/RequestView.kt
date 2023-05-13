@@ -18,7 +18,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -50,7 +49,6 @@ import fin.tech.odem.utils.AppClient
 import fin.tech.odem.viewModels.TransferRequestViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
 fun RequestView(navigator: DestinationsNavigator) {
@@ -58,7 +56,7 @@ fun RequestView(navigator: DestinationsNavigator) {
     var amountValue by remember { mutableStateOf("") } //Parse to double to use it
     var receiverValue by remember { mutableStateOf("") }
     var reasonValue by remember { mutableStateOf("") }
-    val requests by remember { mutableStateOf(AppClient.client.recievedRequests)}
+    val requests by remember{ mutableStateOf(AppClient.client.recievedRequests) }
 
     Box (modifier = Modifier
         .fillMaxSize()

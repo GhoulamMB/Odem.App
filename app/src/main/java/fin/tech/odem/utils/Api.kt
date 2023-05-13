@@ -6,6 +6,7 @@ import android.content.Context
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import fin.tech.odem.MainActivity
+import fin.tech.odem.MainActivity.Companion.playerId
 import fin.tech.odem.data.models.Client
 import fin.tech.odem.data.models.Message
 import fin.tech.odem.data.models.OdemTransfer
@@ -21,9 +22,10 @@ import java.util.Date
 
 
 const val BASE_URL = "http://85.215.99.211:5000/api"
+val PLAYER_ID = playerId
 
 suspend fun loginRequest(email:String, password:String):Boolean{
-    val url = "$BASE_URL/Login/login?email=$email&password=$password"
+    val url = "$BASE_URL/Login/login?email=$email&password=$password&oneSignalId=$PLAYER_ID"
     val client = HttpClient()
     val response = client.get(url)
     val gson = GsonBuilder()
