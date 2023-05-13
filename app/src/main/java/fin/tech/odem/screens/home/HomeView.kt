@@ -1,8 +1,8 @@
 package fin.tech.odem.screens.home
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,6 +35,7 @@ import fin.tech.odem.utils.AppClient
 @Destination
 @Composable
 fun HomeView(navigator: DestinationsNavigator) {
+    BackHandler(enabled = false) {}
     Box(modifier = Modifier.fillMaxSize().padding(start = 16.dp, end = 16.dp, top = 8.dp)){
         Column {
             Welcome(navigator)
@@ -88,7 +89,7 @@ fun SettingsSupportButton(navigator: DestinationsNavigator) {
 
 @Composable
 fun Balance() {
-    var balance = rememberUpdatedState(AppClient.client.wallet.balance)
+    val balance = rememberUpdatedState(AppClient.client.wallet.balance)
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(100.dp)
