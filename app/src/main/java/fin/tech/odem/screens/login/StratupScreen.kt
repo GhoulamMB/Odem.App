@@ -13,6 +13,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,6 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -28,20 +33,22 @@ import fin.tech.odem.R
 import fin.tech.odem.screens.destinations.HomeViewDestination
 import fin.tech.odem.screens.destinations.LoginViewDestination
 import fin.tech.odem.screens.destinations.RegisterViewDestination
+import fin.tech.odem.viewModels.LoginViewModel
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @RootNavGraph(start = true)
 @Destination
 @Composable
 fun Startup (navigator:DestinationsNavigator){
-    val authState = MainActivity.isAuthenticated
-    LaunchedEffect(!authState) {
-        if (!authState) {
+    val viewModel = viewModel<LoginViewModel>()
+    val authState by viewModel.AuthenticationState
+    LaunchedEffect(authState) {
+        if (authState) {
             navigator.navigate(HomeViewDestination)
         }
     }
 
-    if (authState) {
+    if (!authState) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,

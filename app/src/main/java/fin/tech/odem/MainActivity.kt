@@ -24,7 +24,6 @@ class MainActivity : ComponentActivity() {
     companion object {
         lateinit var appContext: Context
         lateinit var playerId: String
-        var isAuthenticated by Delegates.notNull<Boolean>()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +34,6 @@ class MainActivity : ComponentActivity() {
         OneSignal.setAppId(ONESIGNAL_APP_ID)
         playerId = OneSignal.getDeviceState()?.userId.toString()
         appContext = applicationContext
-        val viewModel = LoginViewModel()
-        isAuthenticated = viewModel.AuthenticationState.value
         setContent {
             OdemTheme {
                 Box(
