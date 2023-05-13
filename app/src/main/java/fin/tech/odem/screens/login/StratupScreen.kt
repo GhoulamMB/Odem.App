@@ -13,6 +13,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,14 +37,15 @@ import fin.tech.odem.viewModels.LoginViewModel
 @Composable
 fun Startup (navigator:DestinationsNavigator){
     val loginViewModel = viewModel<LoginViewModel>()
-    val token = loginViewModel.getToken()
-    LaunchedEffect(token) {
-        if (token != null) {
-            loginViewModel.loginWithToken(token)
+    val authenticationState by loginViewModel.AuthenticationState
+
+    LaunchedEffect(authenticationState){
+        if (authenticationState) {
             navigator.navigate(HomeViewDestination)
         }
     }
-    if(token == null){
+
+    if(!authenticationState){
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,

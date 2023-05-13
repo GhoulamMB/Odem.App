@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "771396210207",
-    "project_id": "odemnotifications",
-    "storage_bucket": "odemnotifications.appspot.com"
+    "project_number": "832252364800",
+    "project_id": "odemnotifications-7b362",
+    "storage_bucket": "odemnotifications-7b362.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:771396210207:android:a59bdd500970612c030f2a",
+        "mobilesdk_app_id": "1:832252364800:android:f8a278bd7ee5b2bc7bf0e5",
         "android_client_info": {
           "package_name": "fin.tech.odem"
         }
       },
       "oauth_client": [
         {
-          "client_id": "771396210207-fr45vommhm9l172lmlm35uvsv188qldu.apps.googleusercontent.com",
+          "client_id": "832252364800-4u04eg97j5f61gcr6n20n401c8a0gglg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCJhQWUH-putt0yOhH7SUGvzrCbuhS0mWA"
+          "current_key": "AIzaSyDGkN12Hsl19TZ8DbaL6_cYotTe7M5L2CM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "771396210207-fr45vommhm9l172lmlm35uvsv188qldu.apps.googleusercontent.com",
+              "client_id": "832252364800-4u04eg97j5f61gcr6n20n401c8a0gglg.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

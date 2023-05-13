@@ -98,7 +98,7 @@ fun LoginView(navigator: DestinationsNavigator) {
             Spacer(modifier = Modifier.padding(vertical = 32.dp))
             Button(onClick = {
                                     loginViewModel.viewModelScope.launch {
-                                        if(emailValue.isNotBlank() && passwordValue.isNotBlank() && loginViewModel.Login(emailValue, passwordValue)){
+                                        if(emailValue.isNotBlank() && passwordValue.isNotBlank() && loginViewModel.login(emailValue, passwordValue)){
                                             emailValue = ""
                                             passwordValue=""
                                             navigator.navigate(direction = HomeViewDestination)
