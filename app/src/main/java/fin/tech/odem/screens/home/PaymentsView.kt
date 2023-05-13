@@ -44,7 +44,7 @@ import fin.tech.odem.utils.AppClient
 @Composable
 fun PaymentsView(navigator: DestinationsNavigator) {
     val transactionsState by remember {
-        mutableStateOf(AppClient.client.wallet.transactions.sortedBy { t->t.date })
+        mutableStateOf(AppClient.client.wallet.transactions.sortedByDescending { t->t.date })
     }
     val clientName = "${AppClient.client.firstName} ${AppClient.client.lastName}"
     Box(modifier = Modifier
@@ -123,7 +123,7 @@ fun PaymentsView(navigator: DestinationsNavigator) {
 @Composable
 fun HomePaymentsView(navigator: DestinationsNavigator) {
     val transactionState  by remember {
-        mutableStateOf(AppClient.client.wallet.transactions.sortedBy { t->t.date })
+        mutableStateOf(AppClient.client.wallet.transactions.sortedByDescending { t->t.date })
     }
     val clientName = "${AppClient.client.firstName} ${AppClient.client.lastName}"
     Box {
