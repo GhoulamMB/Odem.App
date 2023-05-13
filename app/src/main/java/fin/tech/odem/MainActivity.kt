@@ -15,6 +15,8 @@ import com.onesignal.OneSignal
 import com.ramcosta.composedestinations.DestinationsNavHost
 import fin.tech.odem.screens.NavGraphs
 import fin.tech.odem.ui.theme.OdemTheme
+import fin.tech.odem.viewModels.LoginViewModel
+import kotlin.properties.Delegates
 
 
 const val ONESIGNAL_APP_ID = "e9e83526-e6b3-4115-90b0-77cd69f3afd4"
@@ -22,12 +24,14 @@ class MainActivity : ComponentActivity() {
     companion object {
         lateinit var appContext: Context
         lateinit var playerId: String
+        var isAuthenticated by Delegates.notNull<Boolean>()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel = LoginViewModel()
+        isAuthenticated = viewModel.AuthenticationState.value
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
-
         // OneSignal Initialization
         OneSignal.initWithContext(this)
         OneSignal.setAppId(ONESIGNAL_APP_ID)
