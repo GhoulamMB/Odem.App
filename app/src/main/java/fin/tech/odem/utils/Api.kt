@@ -186,6 +186,20 @@ suspend fun fetchTicketsRequest(userId: String):List<Ticket>{
     return emptyList()
 }
 
+suspend fun fetchTicketMessages(ticketId: String):List<Message>{
+    val url = "$BASE_URL/Support/ticketMessages?ticketId=$ticketId"
+    val client = HttpClient()
+    val response = client.get(url)
+    val gson = GsonBuilder()
+        .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
+        .create()
+    if(response.status.value == 200) {
+        val body = response.bodyAsText()
+        return gson.fromJson(body, object : TypeToken<List<Message>>() {}.type)
+    }
+    return emptyList()
+}
+
 suspend fun changeEmailRequest(email:String):Boolean{
     val userId = AppClient.client.uid
     val client = HttpClient()

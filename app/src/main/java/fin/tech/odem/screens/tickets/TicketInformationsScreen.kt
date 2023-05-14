@@ -54,8 +54,8 @@ fun TicketInformationsScreen(navigator: DestinationsNavigator,tickedId: String) 
         .last { t->t.id == tickedId }
         .messages.sortedBy { m->m.timestamp }
 
-    val viewModel = TicketInformationsViewModel(messagesList)
-    val messages by viewModel.Messages.collectAsState()
+    val viewModel = TicketInformationsViewModel(messagesList,tickedId)
+    val messages by viewModel.Messages
 
     var messageValue by remember { mutableStateOf("")}
     Box(modifier = Modifier

@@ -1,32 +1,32 @@
 package fin.tech.odem.viewModels
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import fin.tech.odem.data.models.Message
-import fin.tech.odem.utils.AppClient
-import fin.tech.odem.utils.loginWithTokenRequest
+import fin.tech.odem.utils.fetchTicketMessages
 import fin.tech.odem.utils.sendMessageRequest
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class TicketInformationsViewModel(messagesList: List<Message>) : ViewModel() {
+class TicketInformationsViewModel(messagesList: List<Message>,ticketId: String) : ViewModel() {
 
-    private val _messages = MutableStateFlow(messagesList)
-    val Messages: StateFlow<List<Message>> get() = _messages
-    suspend fun sendMessage(message:String,ticketId:String): Message? {
+    val Messages = mutableStateOf(messagesList)
+    init {
+        getTicketMessages(ticketId)
+    }
+
+    fun getTicketMessages(ticketId: String) {
+        viewModelScope.launch {
+            val sorted = fetchTicketMessages(ticketId).sortedBy { m->m.timestamp }
+            Messages.value = sorted
+        }
+    }
+    suspend fun sendMessage(message:String,ticketId:String) {
 
         val messageResponse = sendMessageRequest(message,ticketId)
         if (messageResponse != null) {
-            _messages.value = _messages.value + messageResponse
-            if(loginWithTokenRequest(AppClient.client.token)){
-                return messageResponse
-            }
+            Messages.value = Messages.value + messageResponse
         }
-        return null
     }
 }
 
