@@ -3,6 +3,7 @@ package fin.tech.odem.viewModels
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.onesignal.OneSignal
 import fin.tech.odem.utils.clearToken
 import fin.tech.odem.utils.loginRequest
 import fin.tech.odem.utils.loginWithTokenRequest
@@ -36,6 +37,7 @@ class LoginViewModel : ViewModel(){
     }
 
     private fun deleteToken() {
+        OneSignal.disablePush(true)
         clearToken()
     }
 
