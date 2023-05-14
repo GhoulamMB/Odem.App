@@ -15,8 +15,6 @@ import com.onesignal.OneSignal
 import com.ramcosta.composedestinations.DestinationsNavHost
 import fin.tech.odem.screens.NavGraphs
 import fin.tech.odem.ui.theme.OdemTheme
-import fin.tech.odem.viewModels.LoginViewModel
-import kotlin.properties.Delegates
 
 
 const val ONESIGNAL_APP_ID = "e9e83526-e6b3-4115-90b0-77cd69f3afd4"
