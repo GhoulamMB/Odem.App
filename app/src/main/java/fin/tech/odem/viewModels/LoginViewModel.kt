@@ -37,7 +37,6 @@ class LoginViewModel : ViewModel(){
     }
 
     private fun deleteToken() {
-        OneSignal.disablePush(true)
         clearToken()
     }
 
