@@ -15,7 +15,7 @@ class TicketInformationsViewModel(messagesList: List<Message>,ticketId: String) 
         getTicketMessages(ticketId)
     }
 
-    fun getTicketMessages(ticketId: String) {
+    private fun getTicketMessages(ticketId: String) {
         viewModelScope.launch {
             val sorted = fetchTicketMessages(ticketId).sortedBy { m->m.timestamp }
             Messages.value = sorted
