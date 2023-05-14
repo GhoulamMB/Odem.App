@@ -15,7 +15,7 @@ import java.util.Date
 
 class CustomDateTypeAdapter : JsonSerializer<Date?>,
     JsonDeserializer<Date> {
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
 
     @Synchronized
     override fun serialize(

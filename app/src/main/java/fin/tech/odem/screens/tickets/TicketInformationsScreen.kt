@@ -99,7 +99,7 @@ fun TicketInformationsScreen(navigator: DestinationsNavigator,tickedId: String) 
             .padding(vertical = 16.dp)){
             Row {
                 TextField(
-                    modifier=Modifier.height(46.dp),
+                    modifier=Modifier.height(50.dp),
                     value = messageValue,
                     onValueChange = {messageValue = it},
                     colors = TextFieldDefaults.colors(

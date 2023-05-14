@@ -56,7 +56,7 @@ fun RequestView(navigator: DestinationsNavigator) {
     var amountValue by remember { mutableStateOf("") } //Parse to double to use it
     var receiverValue by remember { mutableStateOf("") }
     var reasonValue by remember { mutableStateOf("") }
-    val requests by remember{ mutableStateOf(AppClient.client.recievedRequests) }
+    val requests by viewModel.Requests
 
     Box (modifier = Modifier
         .fillMaxSize()
@@ -146,36 +146,35 @@ fun RequestView(navigator: DestinationsNavigator) {
             }
             Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
             Text(text = "Recieved Requests", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(vertical = 8.dp))
-            if(requests != null){
-                LazyColumn{
-                    if(requests.isEmpty()){
-                        item {
-                            Text(text = "No requests yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-                        }
-                    }else{
-                        items(requests.size){
-                                i->
-                            run {
-                                if(!requests[i].checked){
-                                    Button(onClick = { navigator.navigate(direction = TransferRequestViewDestination(requests[i])) },
-                                        modifier = Modifier
-                                            .height(50.dp)
-                                            .fillMaxWidth()
-                                            .padding(start = 8.dp, end = 8.dp),
-                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF303030))
-                                        ) {
-                                        Row(modifier = Modifier
-                                            .height(40.dp)
-                                            .fillMaxWidth()
-                                            .background(Color(0xFF303030), RoundedCornerShape(8.dp))
-                                            .padding(start = 8.dp, end = 8.dp)) {
-                                            Column {
-                                                Text(text = requests[i].from)
-                                                Text(text = "${requests[i].amount} DZD")
-                                            }
+            LazyColumn{
+                if(requests.isEmpty()){
+                    item {
+                        Text(text = "No requests yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                    }
+                }else{
+                    items(requests.size){
+                            i->
+                        run {
+                            if(!requests[i].checked){
+                                Button(onClick = { navigator.navigate(direction = TransferRequestViewDestination(requests[i])) },
+                                    modifier = Modifier
+                                        .height(50.dp)
+                                        .fillMaxWidth()
+                                        .padding(start = 8.dp, end = 8.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF303030))
+                                    ) {
+                                    Row(modifier = Modifier
+                                        .height(40.dp)
+                                        .fillMaxWidth()
+                                        .background(Color(0xFF303030), RoundedCornerShape(8.dp))
+                                        .padding(start = 8.dp, end = 8.dp)) {
+                                        Column {
+                                            Text(text = requests[i].from)
+                                            Text(text = "${requests[i].amount} DZD")
                                         }
                                     }
                                 }
+                                Spacer(modifier = Modifier.padding(vertical = 6.dp))
                             }
                         }
                     }

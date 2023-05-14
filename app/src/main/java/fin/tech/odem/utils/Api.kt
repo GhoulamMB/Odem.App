@@ -11,6 +11,7 @@ import fin.tech.odem.data.models.Client
 import fin.tech.odem.data.models.Message
 import fin.tech.odem.data.models.OdemTransfer
 import fin.tech.odem.data.models.Ticket
+import fin.tech.odem.data.models.TransferRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.post
@@ -239,4 +240,18 @@ suspend fun declineTransferRequest(transferId: String):Boolean{
         return true
     }
     return false
+}
+
+suspend fun getRequests(userId: String):List<TransferRequest>{
+    val url = "$BASE_URL/Transactions/requests?userId=$userId"
+    val client = HttpClient()
+    val response = client.get(url)
+    val gson = GsonBuilder()
+        .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
+        .create()
+    if(response.status.value == 200) {
+        val body = response.bodyAsText()
+        return gson.fromJson(body, object : TypeToken<List<TransferRequest>>() {}.type)
+    }
+    return emptyList()
 }

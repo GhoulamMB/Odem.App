@@ -124,20 +124,19 @@ fun HomePaymentsView(navigator: DestinationsNavigator) {
     val transactionState by viewModel.Transactions
     val clientName = "${AppClient.client.firstName} ${AppClient.client.lastName}"
     Box {
-        LazyColumn{
-            if(AppClient.client.wallet.transactions.isEmpty()){
+        LazyColumn(modifier = Modifier.height(320.dp)){
+            if(transactionState.isEmpty()){
                 item {
                     Text(text = "No transactions yet", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 }
             }else{
-                items(transactionState.take(5).size){
+                items(transactionState.size){
                         i->
                     run {
-                        Button(onClick = { navigator.navigate(direction = TransactionDetailsDestination(transactionState[i])) },
-                            modifier = Modifier
-                                .height(50.dp)
-                                .fillMaxWidth()
-                                .padding(start = 8.dp, end = 8.dp),
+                        Button(onClick = { navigator.navigate(direction = TransactionDetailsDestination(transactionState[i])) },modifier = Modifier
+                            .height(50.dp)
+                            .fillMaxWidth()
+                            .padding(start = 8.dp, end = 8.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF303030))
                         ) {
                             Box(
@@ -145,19 +144,11 @@ fun HomePaymentsView(navigator: DestinationsNavigator) {
                                     .weight(1f)
                                     .align(Alignment.CenterVertically)
                             ) {
-                                if(transactionState[i].partyOne != clientName){
-                                    Text(
-                                        text = AppClient.client.wallet.transactions[i].partyOne,
-                                        color = Color.White,
-                                        textAlign = TextAlign.Center
-                                    )
-                                }else{
-                                    Text(
-                                        text = AppClient.client.wallet.transactions[i].partyTwo,
-                                        color = Color.White,
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
+                                Text(
+                                    text = transactionState[i].partyTwo,
+                                    color = Color.White,
+                                    textAlign = TextAlign.Center
+                                )
                             }
                             Box(
                                 modifier = Modifier
@@ -165,18 +156,17 @@ fun HomePaymentsView(navigator: DestinationsNavigator) {
                                     .fillMaxSize(),
                                 contentAlignment = Alignment.CenterEnd
                             ) {
-                                if (transactionState[i].partyOne != clientName) {
+                                if(transactionState[i].partyTwo != clientName){
                                     Text(
-                                        text = "+${AppClient.client.wallet.transactions[i].amount} DZD",
-                                        color = Color(0xFF4CAF50)
+                                        text = "-${transactionState[i].amount} DZD",
+                                        color = Color(0xFFF44336)
                                     )
                                 }else{
                                     Text(
-                                        text = "-${AppClient.client.wallet.transactions[i].amount} DZD",
-                                        color = Color(0xFFF44336)
+                                        text = "+${transactionState[i].amount} DZD",
+                                        color = Color(0xFF4CAF50)
                                     )
                                 }
-
                             }
                         }
                         Spacer(modifier = Modifier.padding(vertical = 6.dp))
