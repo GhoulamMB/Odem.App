@@ -97,8 +97,8 @@ fun RequestView(navigator: DestinationsNavigator) {
                     TextField(
                         value = receiverValue,
                         onValueChange = { receiverValue = it },
-                        placeholder = { Text("For Who?") },
-                        label = { Text(text = "For Who?") },
+                        placeholder = { Text("From Who?") },
+                        label = { Text(text = "From Who?") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         modifier = Modifier.fillMaxWidth(),
                         colors = TextFieldDefaults.colors(
