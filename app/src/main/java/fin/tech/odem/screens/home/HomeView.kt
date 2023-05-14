@@ -14,14 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,22 +31,16 @@ import fin.tech.odem.screens.BottomBar
 import fin.tech.odem.screens.destinations.SettingsViewDestination
 import fin.tech.odem.screens.destinations.SupportViewDestination
 import fin.tech.odem.utils.AppClient
-import fin.tech.odem.viewModels.MainViewModel
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Destination
 @Composable
 fun HomeView(navigator: DestinationsNavigator) {
-    val viewModel = MainViewModel()
-    val refreshing by viewModel.isRefreshing.collectAsState()
-    val pullRefreshState = rememberPullRefreshState(refreshing, { viewModel.refresh() })
     BackHandler(enabled = false) {}
     Box(modifier = Modifier
         .fillMaxSize()
-        .padding(start = 16.dp, end = 16.dp, top = 8.dp)
-        .pullRefresh(pullRefreshState)){
-        PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
+        .padding(start = 16.dp, end = 16.dp, top = 8.dp)){
         Column {
             Welcome(navigator)
             Spacer(modifier = Modifier.padding(vertical = 12.dp))
