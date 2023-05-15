@@ -144,11 +144,19 @@ fun HomePaymentsView(navigator: DestinationsNavigator) {
                                     .weight(1f)
                                     .align(Alignment.CenterVertically)
                             ) {
-                                Text(
-                                    text = transactionState[i].partyTwo,
-                                    color = Color.White,
-                                    textAlign = TextAlign.Center
-                                )
+                                if(transactionState[i].partyTwo != clientName){
+                                    Text(
+                                        text = transactionState[i].partyTwo,
+                                        color = Color.White,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }else{
+                                    Text(
+                                        text = transactionState[i].partyOne,
+                                        color = Color.White,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                             Box(
                                 modifier = Modifier
