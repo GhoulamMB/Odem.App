@@ -16,13 +16,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.R
@@ -30,7 +31,7 @@ import fin.tech.odem.screens.BottomBar
 import fin.tech.odem.screens.destinations.SettingsViewDestination
 import fin.tech.odem.screens.destinations.SupportViewDestination
 import fin.tech.odem.utils.AppClient
-
+import fin.tech.odem.viewModels.PaymentsViewModel
 
 
 @Destination
@@ -94,7 +95,8 @@ fun SettingsSupportButton(navigator: DestinationsNavigator) {
 
 @Composable
 fun Balance() {
-    val balance = rememberUpdatedState(AppClient.client.wallet.balance)
+    val viewModel = viewModel<PaymentsViewModel>()
+    val balance by viewModel.Balance
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(100.dp)
@@ -103,7 +105,7 @@ fun Balance() {
             Text(text = "Your balance is", color = Color.White)
             Spacer(modifier = Modifier.padding(vertical = 18.dp))
             Row {
-                Text(text = "${balance.value} DZD", color = Color.White, fontSize = 16.sp)
+                Text(text = "$balance DZD", color = Color.White, fontSize = 16.sp)
             }
         }
     }

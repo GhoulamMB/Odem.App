@@ -36,6 +36,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import fin.tech.odem.screens.destinations.LoginViewDestination
 import fin.tech.odem.screens.destinations.PersonalInformationsViewDestination
+import fin.tech.odem.utils.isValidEmail
 import fin.tech.odem.viewModels.RegisterViewModel
 import kotlinx.coroutines.launch
 
@@ -108,7 +109,7 @@ fun RegisterView(navigator: DestinationsNavigator) {
             }
             Spacer(modifier = Modifier.padding(vertical = 32.dp))
             Button(onClick = {
-                if(emailValue.isNotBlank() && passwordValue.isNotBlank() && isTermsChecked){
+                if(emailValue.isNotBlank() && passwordValue.isNotBlank() && isTermsChecked && isValidEmail(emailValue)){
                     navigator.navigate(direction = PersonalInformationsViewDestination(emailValue,passwordValue))
                 }else{
                     showAlertDialog = true

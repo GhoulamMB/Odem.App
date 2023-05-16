@@ -139,6 +139,8 @@ fun SendView(navigator: DestinationsNavigator) {
                             sendViewModel.viewModelScope.launch {
                                 if(sendViewModel.sendMoney(amountValue.toDouble(), receiverValue)){
                                     navigator.navigate(direction = HomeViewDestination)
+                                }else{
+                                    showErrorAlertDialog = true
                                 }
                             }
                             showConfirmationAlertDialog = false

@@ -3,6 +3,7 @@
 package fin.tech.odem.utils
 
 import android.content.Context
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import fin.tech.odem.MainActivity
@@ -121,11 +122,7 @@ suspend fun transactionRequest(amount:Double, toEmail:String):Boolean{
         headers.append("Content-Type", "application/json")
         headers.append("Accept", "accept: */*")
     }
-    if(response.status.value == 200){
-        loginWithTokenRequest(AppClient.client.token)
-        return true
-    }
-    return false
+    return response.status.value == 200
 }
 
 suspend fun fetchTransactionsRequest(userId: String):List<OdemTransfer>{
@@ -143,6 +140,14 @@ suspend fun fetchTransactionsRequest(userId: String):List<OdemTransfer>{
     return emptyList()
 }
 
+suspend fun fetchWalletBalance(walletId: String): Double {
+    val url = "$BASE_URL/Transactions/walletBalance?walletId=$walletId"
+    val client = HttpClient()
+    val response = client.get(url)
+    val gson = Gson()
+    val body = response.bodyAsText()
+    return gson.fromJson(body, Double::class.java)
+}
 suspend fun createTicketRequest(message:String, userId:String):Ticket{
     val url = "$BASE_URL/Support/createticket?message=$message&userId=$userId"
     val client = HttpClient()
