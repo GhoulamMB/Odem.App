@@ -1,6 +1,7 @@
 package fin.tech.odem.screens.login
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +14,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -41,9 +41,9 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Destination
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginView(navigator: DestinationsNavigator) {
+    BackHandler(enabled = false) {}
     var emailValue by remember { mutableStateOf("") }
     var passwordValue by remember { mutableStateOf("") }
     val loginViewModel = LoginViewModel()

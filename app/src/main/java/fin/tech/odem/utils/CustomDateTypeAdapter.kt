@@ -15,7 +15,7 @@ import java.util.Date
 
 class CustomDateTypeAdapter : JsonSerializer<Date?>,
     JsonDeserializer<Date> {
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", java.util.Locale.getDefault())
 
     @Synchronized
     override fun serialize(
@@ -23,7 +23,7 @@ class CustomDateTypeAdapter : JsonSerializer<Date?>,
         type: Type,
         jsonSerializationContext: JsonSerializationContext
     ): JsonElement {
-        return JsonPrimitive(dateFormat.format(date))
+        return JsonPrimitive(date?.let { dateFormat.format(it) })
     }
 
     @Synchronized

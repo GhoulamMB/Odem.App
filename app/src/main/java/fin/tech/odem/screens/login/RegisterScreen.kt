@@ -56,7 +56,6 @@ fun RegisterView(navigator: DestinationsNavigator) {
         ) {
             var emailValue by remember { mutableStateOf("") }
             var passwordValue by remember { mutableStateOf("") }
-            var isTermsCheck by remember { mutableStateOf(false)}
 
             val customTextFieldShape = RoundedCornerShape(4.dp)
 
