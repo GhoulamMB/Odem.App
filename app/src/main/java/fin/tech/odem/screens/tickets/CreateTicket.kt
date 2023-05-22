@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -40,12 +40,13 @@ import fin.tech.odem.screens.destinations.TicketInformationsScreenDestination
 import fin.tech.odem.viewModels.CreateTicketViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Destination
 @Composable
 fun CreateTicketScreen(navigator: DestinationsNavigator) {
     val viewModel = CreateTicketViewModel()
     var messageValue by remember {mutableStateOf("")}
+    var showErrorAlertDialog by remember {mutableStateOf(false)}
     Box (modifier = Modifier
         .fillMaxSize()
         .padding(start = 16.dp, end = 16.dp, top = 8.dp)){
@@ -84,12 +85,17 @@ fun CreateTicketScreen(navigator: DestinationsNavigator) {
                     Spacer(modifier = Modifier.padding(vertical = 20.dp))
                     Column(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
                         Button(onClick = {
-                                         viewModel.viewModelScope.launch{
-                                             val ticket = viewModel.createTicket(messageValue)
-                                             if(ticket != null){
-                                                 navigator.navigate(direction = TicketInformationsScreenDestination(tickedId = ticket.id))
-                                             }
-                                         }
+                                            if(messageValue.isNotBlank()){
+                                                viewModel.viewModelScope.launch{
+                                                    val ticket = viewModel.createTicket(messageValue)
+                                                    if(ticket != null){
+                                                        messageValue = ""
+                                                        navigator.navigate(direction = TicketInformationsScreenDestination(tickedId = ticket.id))
+                                                    }
+                                                }
+                                            }else{
+                                                showErrorAlertDialog = true
+                                            }
                         },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
                             Text(text = "Send", fontSize = 24.sp,
@@ -100,5 +106,29 @@ fun CreateTicketScreen(navigator: DestinationsNavigator) {
                 }
             }
         }
+    }
+    if(showErrorAlertDialog){
+        AlertDialog(
+            containerColor = Color(0xFF2E2E2E),
+            onDismissRequest = {
+                showErrorAlertDialog = false
+            },
+            title = {
+                Text(text = "Error")
+            },
+            text = {
+                Text(text = "Please enter a message to send")
+            },
+            confirmButton = {
+                Button(
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
+                    onClick = {
+                        showErrorAlertDialog = false
+                    }
+                ) {
+                    Text(text = "OK")
+                }
+            }
+        )
     }
 }

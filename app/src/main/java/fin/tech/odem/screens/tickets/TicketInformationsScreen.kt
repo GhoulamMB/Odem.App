@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -71,7 +72,7 @@ fun TicketInformationsScreen(navigator: DestinationsNavigator,tickedId: String) 
                 )
             }
             Spacer(modifier = Modifier.padding(vertical = 18.dp))
-            LazyColumn{
+            LazyColumn(modifier = Modifier.height(520.dp)){
                 items(messages.size){
                     i->
                     run {
@@ -116,7 +117,8 @@ fun TicketInformationsScreen(navigator: DestinationsNavigator,tickedId: String) 
                         messageValue = ""
                     }
 
-                }, modifier = Modifier.height(46.dp)) {
+                }, modifier = Modifier.height(46.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
                     Text(text = "Send")
                 }
             }
