@@ -17,7 +17,7 @@ import fin.tech.odem.screens.NavGraphs
 import fin.tech.odem.ui.theme.OdemTheme
 
 
-const val ONESIGNAL_APP_ID = "e9e83526-e6b3-4115-90b0-77cd69f3afd4"
+const val ONESIGNAL_APP_ID = "47f46191-c166-40ca-995b-1c1942125df2"
 class MainActivity : ComponentActivity() {
     companion object {
         lateinit var appContext: Context
