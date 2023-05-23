@@ -66,7 +66,7 @@ fun clearToken() {
 }
 suspend fun loginWithTokenRequest(token:String):Boolean{
     val client = HttpClient()
-    val response = client.get("$BASE_URL/Login/loginwithtoken?token=$token")
+    val response = client.get("$BASE_URL/Login/loginwithtoken?token=$token&oneSignalId=$PLAYER_ID")
     val gson = GsonBuilder()
         .registerTypeAdapter(Date::class.java, CustomDateTypeAdapter())
         .create()
