@@ -46,6 +46,7 @@ import fin.tech.odem.screens.destinations.HomeViewDestination
 import fin.tech.odem.screens.destinations.LoginViewDestination
 import fin.tech.odem.screens.destinations.SettingsViewDestination
 import fin.tech.odem.utils.AppClient
+import fin.tech.odem.utils.isValidEmail
 import fin.tech.odem.viewModels.SettingsViewModel
 import kotlinx.coroutines.launch
 
@@ -156,7 +157,7 @@ fun ChangeEmailScreen(navigator: DestinationsNavigator) {
                 Spacer(modifier = Modifier.padding(vertical = 12.dp))
                 Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center) {
                     Button(onClick = {
-                                     if(emailValue.isNotBlank() && emailValue != AppClient.client.email){
+                                     if(emailValue.isNotBlank() && isValidEmail(emailValue) && emailValue != AppClient.client.email){
                                          showConfirmationAlertDialog = true
                                      }else{
                                          showErrorAlertDialog = true
