@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
@@ -45,7 +46,6 @@ import fin.tech.odem.data.models.TransferRequest
 import fin.tech.odem.screens.destinations.HomeViewDestination
 import fin.tech.odem.screens.destinations.RequestViewDestination
 import fin.tech.odem.screens.destinations.TransferRequestViewDestination
-import fin.tech.odem.utils.AppClient
 import fin.tech.odem.viewModels.TransferRequestViewModel
 import kotlinx.coroutines.launch
 
@@ -132,8 +132,9 @@ fun RequestView(navigator: DestinationsNavigator) {
                         Button(onClick = {
                                          viewModel.viewModelScope.launch{
                                              //validate reciever email on release version
-                                             viewModel.createRequest(receiverValue,amountValue.toDouble(),reasonValue)
-                                             navigator.navigate(direction = HomeViewDestination)
+                                             if(viewModel.createRequest(receiverValue,amountValue.toDouble(),reasonValue)){
+                                                 navigator.navigate(direction = HomeViewDestination)
+                                             }
                                          }
                         },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
@@ -188,6 +189,8 @@ fun RequestView(navigator: DestinationsNavigator) {
 @Composable
 fun TransferRequestView(navigator: DestinationsNavigator,transferRequest: TransferRequest) {
     val viewModel = viewModel<TransferRequestViewModel>()
+    var showConfirmationAlertDialog by remember {mutableStateOf(false)}
+    var showErrorAlertDialog by remember {mutableStateOf(false)}
     Box (modifier = Modifier
         .fillMaxSize()
         .padding(start = 16.dp, end = 16.dp, top = 8.dp)){
@@ -217,11 +220,7 @@ fun TransferRequestView(navigator: DestinationsNavigator,transferRequest: Transf
                     .fillMaxWidth()
                     .padding(vertical = 32.dp),horizontalArrangement = Arrangement.SpaceEvenly) {
                     Button(onClick = {
-                                     viewModel.viewModelScope.launch {
-                                         viewModel.acceptRequest(transferRequest.id,transferRequest.amount)
-                                         AppClient.client.recievedRequests.last { t->t.id == transferRequest.id }.checked = true
-                                         navigator.navigate(direction = RequestViewDestination)
-                                     }
+                                     showConfirmationAlertDialog = true
                     },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE))) {
                         Text(text = "Accept", fontSize = 16.sp,
@@ -241,6 +240,61 @@ fun TransferRequestView(navigator: DestinationsNavigator,transferRequest: Transf
                     }
                 }
             }
+        }
+        if(showConfirmationAlertDialog){
+            AlertDialog(
+                containerColor = Color(0xFF2E2E2E),
+                onDismissRequest = {
+                    showConfirmationAlertDialog = false
+                },
+                title = {
+                    Text(text = "Confirmation")
+                },
+                text = {
+                    Text(text = "Are you sure you want to send ${transferRequest.amount} DZD to ${transferRequest.to}")
+                },
+                confirmButton = {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
+                        onClick = {
+                            viewModel.viewModelScope.launch {
+                                if(viewModel.acceptRequest(transferRequest.id)){
+                                    navigator.navigate(direction = HomeViewDestination)
+                                }else{
+                                    showErrorAlertDialog = true
+                                }
+                            }
+                            showConfirmationAlertDialog = false
+                        }
+                    ) {
+                        Text(text = "OK")
+                    }
+                }
+            )
+        }
+        if(showErrorAlertDialog){
+            AlertDialog(
+                containerColor = Color(0xFF2E2E2E),
+                onDismissRequest = {
+                    showErrorAlertDialog = false
+                },
+                title = {
+                    Text(text = "Error")
+                },
+                text = {
+                    Text(text = "Invalid email or amount.")
+                },
+                confirmButton = {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
+                        onClick = {
+                            showErrorAlertDialog = false
+                        }
+                    ) {
+                        Text(text = "OK")
+                    }
+                }
+            )
         }
     }
 }

@@ -122,7 +122,8 @@ suspend fun transactionRequest(amount:Double, toEmail:String):Boolean{
         headers.append("Content-Type", "application/json")
         headers.append("Accept", "accept: */*")
     }
-    return response.status.value == 200
+    val result = response.status.value == 200
+    return result
 }
 
 suspend fun fetchTransactionsRequest(userId: String):List<OdemTransfer>{
@@ -243,11 +244,7 @@ suspend fun acceptTransferRequest(transferId:String):Boolean {
     val url = "$BASE_URL/Transactions/AcceptTransferRequest?Id=$transferId"
     val client = HttpClient()
     val response = client.post(url)
-    if(response.status.value == 200){
-        loginWithTokenRequest(AppClient.client.token)
-        return true
-    }
-    return false
+    return response.status.value == 200
 }
 
 suspend fun declineTransferRequest(transferId: String):Boolean{

@@ -120,6 +120,7 @@ fun SendView(navigator: DestinationsNavigator) {
                 }
             }
         }
+
         if(showConfirmationAlertDialog){
             AlertDialog(
                 containerColor = Color(0xFF2E2E2E),
@@ -137,7 +138,7 @@ fun SendView(navigator: DestinationsNavigator) {
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF536DFE)),
                         onClick = {
                             sendViewModel.viewModelScope.launch {
-                                if(sendViewModel.sendMoney(amountValue.toDouble(), receiverValue)){
+                                if(sendViewModel.sendMoney(amountValue.toDouble(),receiverValue)){
                                     navigator.navigate(direction = HomeViewDestination)
                                 }else{
                                     showErrorAlertDialog = true
